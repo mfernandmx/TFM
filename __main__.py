@@ -3,6 +3,7 @@ import sys
 import json
 
 from getPortalsMetadata import getPortalInfo
+from processMetadata import processDatasets
 
 def main():
 
@@ -52,9 +53,8 @@ def main():
     print("Discarded 1", discarded1)
     print("Discarded 2", discarded2)
 
-    # Volcar estadísticas en otro excel
-
-    # processDatasets(datasets1, datasets2)
+    # TODO: Statistics in new xls
+    processDatasets(datasets1, datasets2)
 
 
 if __name__ == '__main__':

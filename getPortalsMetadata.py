@@ -5,13 +5,14 @@ import sys
 import requests
 import json
 
-from processMetadata import processDatasets, Dataset
+from Dataset import Dataset
+from getRDFProperties import processRDF
 from nltk.tokenize import RegexpTokenizer
 import re
 import normalize
 
+# TODO: Test more rdf types
 rdfFormats = ["rdf"]
-# socrataFormat = ["csv", "geojson", "json", "rdf", "xml"]
 
 '''
 Given a list of datasets from an open data portal, it is obtained all the metadata from each dataset
@@ -142,7 +143,7 @@ def getPortalInfo(portal, typePortal):
 		CKAN open data portals returns a list with the identifiers of all datasets, and it is needed to do a request
 		for each of the datasets in order to obtain its metadata
 		'''
-		if typePortal == "ckan":  # or typePortal == "dkan":
+		if typePortal == "ckan":
 			dataJson = getDatasetsInfoFromList(portal, dataJson)
 
 		# Get info from json object array
@@ -193,6 +194,9 @@ def getPortalInfo(portal, typePortal):
 	
 					if resourceFormat.lower() in rdfFormats:
 						dataset.RDFResources.append(resource["url"])
+						classes, properties = processRDF(resource["url"])
+						dataset.classes = classes
+						dataset.properties = properties
 	
 			elif "dataUri" in element:
 				urlData = element["dataUri"]

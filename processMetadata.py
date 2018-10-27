@@ -18,27 +18,6 @@ from nltk.corpus import stopwords
 stop_words = stopwords.words('spanish')
 
 '''
-Class to store all relevant information about a dataset
-'''
-class Dataset:
-	title = ""
-	identifier = ""
-
-	description = ""
-	keyword = []
-	language = ""
-	theme = ""
-	RDFResources = []
-	DCATformat = True
-	resourceFormats = []
-
-	def __init__(self):
-		self.keyword = []
-		self.resourceFormats = []
-		self.RDFResources = []
-
-
-'''
 Given a string, return true if it contains numbers. False if not
 '''
 def hasNumbers(inputString):
@@ -143,7 +122,7 @@ def processDatasets(datasets1, datasets2):
 				dataset2.keyword) + " " + dataset2.theme + " " + dataset2.description
 			tokens2 = getTokens(metadata2, coincidences2)
 
-			# Where magic will happen
+			# TODO: Where magic will happen
 			# likenessValue = getLikenessValue(tokens1, tokens2)
 			likenessValue = uniform(0.0, 1.0)
 
