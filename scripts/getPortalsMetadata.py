@@ -5,11 +5,11 @@ import sys
 import requests
 import json
 
-from Dataset import Dataset
-from getRDFProperties import processRDF
+from objects.Dataset import Dataset
+from scripts.getRDFProperties import processRDF
 from nltk.tokenize import RegexpTokenizer
 import re
-import normalize
+from scripts import normalize
 
 # TODO: Test more rdf types
 rdfFormats = ["rdf"]

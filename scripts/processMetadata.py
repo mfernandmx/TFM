@@ -6,7 +6,7 @@ from random import uniform
 import xlwt  # lib to write.
 
 import re
-import normalize
+from scripts import normalize
 
 # LDA proccess
 from nltk.tokenize import RegexpTokenizer

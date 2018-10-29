@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Reusable Form Demo</title>
+    </head>
+    <body>
+        <form action="" method="post">
+            {{ form.csrf }}
+
+            <div class="input text">
+                {{ form.name.label }} {{ form.name }}
+            </div>
+            <div class="input text">
+                {{ form.name.label }} {{ form.name }}
+            </div>
+
+            <div class="input submit">
+                <input type="submit" value="Ejecutar" />
+            </div>
+        </form>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message[1] }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </body>
+</html>
