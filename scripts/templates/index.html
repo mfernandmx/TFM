@@ -1,25 +1,41 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Reusable Form Demo</title>
+        <title>Inicio</title>
+
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     </head>
     <body>
-        <form action="" method="post">
-            {{ form.csrf }}
+        <h1>Emparejamiento de datasets con técnicas semánticas</h1>
+        <h2>Marcos Fernández Sellers</h2>
+        <div>
+            <h3>Datos de entrada</h3>
+            <form action="" method="post">
+                {{ form.csrf }}
 
-            <div class="input text">
-                {{ form.name.label }} {{ form.name }}
-            </div>
-            <div class="input text">
-                {{ form.name.label }} {{ form.name }}
-            </div>
+                <div class="input text">
+                    {{ form.portal1.label }} {{ form.portal1 }}
+                </div>
+                <div class="input select">
+                    {{ form.type1.label }} {{ form.type1 }}
+                </div>
+                <div class="input text">
+                    {{ form.portal2.label }} {{ form.portal2 }}
+                </div>
+                <div class="input select">
+                    {{ form.type2.label }} {{ form.type2 }}
+                </div>
 
-            <div class="input submit">
-                <input type="submit" value="Ejecutar" />
-            </div>
-        </form>
+                <div class="input submit">
+                    <input type="submit" value="Ejecutar" />
+                </div>
+            </form>
+        </div>
+        <div>
+            <h3>Resultados</h3>
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
+                <p>Datos introducidos:</p>
                 <ul>
                     {% for message in messages %}
                         <li>{{ message[1] }}</li>
@@ -27,5 +43,6 @@
                 </ul>
             {% endif %}
         {% endwith %}
+        </div>
     </body>
 </html>
