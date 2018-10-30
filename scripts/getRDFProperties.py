@@ -3,9 +3,8 @@
 
 import requests
 
-# import rdflib
 from rdflib import Graph
-# from rdflib.plugins.sparql import prepareQuery
+from rdflib.plugins.sparql import prepareQuery
 
 def removeOntology(value):
     if "#" in value:
@@ -20,7 +19,7 @@ def processRDF(url):
 
     graph = Graph()
     classes = []
-    properties = []
+    properties = {}
 
     try:
         # Download and load RDF resource
@@ -32,17 +31,22 @@ def processRDF(url):
 
             for result in queryResults:
                 classes.append(removeOntology(result[0]))
-                print(removeOntology(result[0]))
 
-            # TODO
-            '''
             # Query and store properties, its datatype and one example value
-            query = prepareQuery("""SELECT DISTINCT ?property min(?value) as ?valor datatype(min(?value)) as ?tipo WHERE {?uri ?property ?value}""")
+            query = prepareQuery("""SELECT DISTINCT ?property ?value WHERE {?uri ?property ?value}""")
             queryResults = graph.query(query)
 
             for result in queryResults:
-                print(result)
-            '''
+                prop = removeOntology(result[0])
+                value = result[1]
+
+                if hasattr(result[1], "datatype") and result[1].datatype is not None:
+                    valueType = removeOntology(result[1].datatype)
+                else:
+                    valueType = result[1].__class__.__name__
+
+                if prop != "type" and prop not in properties.keys():
+                    properties[prop] = {"value": str(value), "type": valueType}
 
     except requests.exceptions.RequestException as e:
         print(e)

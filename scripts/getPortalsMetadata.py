@@ -22,7 +22,6 @@ def getDatasetsInfoFromList(portal, datasets):
 
 	# Iterate over the list of datasets, and query on each of them
 	for dataset in datasets["result"]:
-		print(dataset)
 		try:
 			response = requests.get(portal.replace("package_list", "package_show?id=" + str(dataset)), timeout=5)
 			dataJson = json.loads(response.content)
@@ -144,6 +143,7 @@ def getPortalInfo(portal, typePortal):
 		for each of the datasets in order to obtain its metadata
 		'''
 		if typePortal == "ckan":
+			print("Downloading resources")
 			dataJson = getDatasetsInfoFromList(portal, dataJson)
 
 		# Get info from json object array
@@ -194,9 +194,9 @@ def getPortalInfo(portal, typePortal):
 	
 					if resourceFormat.lower() in rdfFormats:
 						dataset.RDFResources.append(resource["url"])
-						classes, properties = processRDF(resource["url"])
-						dataset.classes = classes
-						dataset.properties = properties
+						RDFClasses, RDFProperties = processRDF(resource["url"])
+						dataset.RDFschema["classes"].append(RDFClasses)
+						dataset.RDFschema["properties"].append(RDFProperties)
 	
 			elif "dataUri" in element:
 				urlData = element["dataUri"]
@@ -206,6 +206,9 @@ def getPortalInfo(portal, typePortal):
 					if response.status_code == 200:
 						dataset.resourceFormats.append(resourceFormat)
 						dataset.RDFResources.append(urlResource)
+						RDFClasses, RDFProperties = processRDF(urlResource)
+						dataset.RDFschema["classes"].append(RDFClasses)
+						dataset.RDFschema["properties"].append(RDFProperties)
 
 			# Tokenize all metadata, save only the nouns and store their appearance frequency
 			metadata = dataset.title + " " + dataset.description + " " + str(dataset.keyword) + " " + dataset.theme
