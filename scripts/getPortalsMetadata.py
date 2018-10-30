@@ -149,13 +149,13 @@ def getPortalInfo(portal, typePortal):
 		# Get info from json object array
 		numDatasets = len(dataJson)
 		totalDatasets += numDatasets
-		print(numDatasets)
+		print("Number of datasets:",numDatasets)
 
 		index = 0
 
 		# Once the metadata is downloaded, we iterate it to get the information we want to process
 		for element in dataJson:
-			print(index)
+			print("Dataset", index)
 			dataset = Dataset()
 	
 			if title in element.keys() and element[title] is not None:
