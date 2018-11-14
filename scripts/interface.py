@@ -1,8 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from flask import Flask, render_template, flash, request
+from flask import Flask, render_template, flash, request, abort, jsonify
 from wtforms import Form, validators, StringField, SelectField
+
+from scripts.init import initProcessing
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -30,16 +32,42 @@ def home():
     if request.method == 'POST':
         portal1 = request.form['portal1']
         portal2 = request.form['portal2']
-        type1 = request.form['type1']
-        type2 = request.form['type2']
-        print(portal1, portal2, type1, type2)
+        typePortal1 = request.form['type1']
+        typePortal2 = request.form['type2']
+        print(portal1, portal2, typePortal1, typePortal2)
 
         if form.validate():
-            # Save the comment here.
-            flash('Portal 1: ' + portal1 + ' (' + type1 + ')')
-            flash('Portal 2: ' + portal2 + ' (' + type2 + ')')
+            flash('Portal 1: ' + portal1 + ' (' + typePortal1 + ')')
+            flash('Portal 2: ' + portal2 + ' (' + typePortal2 + ')')
 
+            # initProcessing(request.json["portal1"], typePortal1, request.json["portal2"], typePortal2)
+
+            # TODO Return results
         else:
             flash('All the form fields are required. ')
 
     return render_template("index.html", form=form)
+
+@app.route('/api', methods=['GET', 'POST'])
+def hello():
+    if request.method == 'POST':
+        if not request.json or 'portal1' not in request.json or 'portal2' not in request.json:
+            abort(400)
+
+        typePortal1 = "ckan"
+        typePortal2 = "ckan"
+
+        if "type1" in request.json:
+            typePortal1 = request.json["type1"]
+
+        if "type2" in request.json:
+            typePortal2 = request.json["type1"]
+
+        # initProcessing(request.json["portal1"], typePortal1, request.json["portal2"], typePortal2)
+
+        # TODO Return results
+        return jsonify(request.json)
+
+    elif request.method == 'GET':
+        return 'Welcome to the API service. Please, do a POST request on this same url, with the following parameters structure: ' \
+               '{"portal1": "url_portal_1", "type1":"type_portal_1", "portal2": "url_portal_2", "type2": "type_portal_2"}'

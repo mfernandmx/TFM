@@ -194,6 +194,7 @@ def getPortalInfo(portal, typePortal):
 	
 					if resourceFormat.lower() in rdfFormats:
 						dataset.RDFResources.append(resource["url"])
+						# TODO: Check duplicates
 						RDFClasses, RDFProperties = processRDF(resource["url"])
 						dataset.RDFschema["classes"].append(RDFClasses)
 						dataset.RDFschema["properties"].append(RDFProperties)
