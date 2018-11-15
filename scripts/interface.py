@@ -19,6 +19,7 @@ class ReusableForm(Form):
     portal2 = StringField('URL Portal 2:', validators=[validators.required()], default='https://data.cityofchicago.org/api/views/metadata/v1')
     type2 = SelectField('Portal Type 2', choices=[('ckan', 'ckan'), ('socrata', 'socrata')], default='socrata')
 
+# TODO Diferenciar entre API e interfaz
 @app.errorhandler(404)
 def page_not_found():
     return render_template('404.html'), 404
@@ -40,7 +41,7 @@ def home():
             flash('Portal 1: ' + portal1 + ' (' + typePortal1 + ')')
             flash('Portal 2: ' + portal2 + ' (' + typePortal2 + ')')
 
-            # initProcessing(request.json["portal1"], typePortal1, request.json["portal2"], typePortal2)
+            # resultsFile = initProcessing(request.json["portal1"], typePortal1, request.json["portal2"], typePortal2)
 
             # TODO Return results
         else:
@@ -63,7 +64,7 @@ def hello():
         if "type2" in request.json:
             typePortal2 = request.json["type1"]
 
-        # initProcessing(request.json["portal1"], typePortal1, request.json["portal2"], typePortal2)
+        # resultsFile = initProcessing(request.json["portal1"], typePortal1, request.json["portal2"], typePortal2)
 
         # TODO Return results
         return jsonify(request.json)

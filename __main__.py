@@ -6,7 +6,7 @@ from scripts.init import initProcessing
 
 def main():
 
-    # Use example for command line
+    # Example parameters for command line
     # http://opendata.caceres.es/api/action/package_list https://data.cityofchicago.org/api/views/metadata/v1 ckan socrata
 
     # Example POST params for API
@@ -36,7 +36,10 @@ def main():
             typePortal1 = "ckan"
             typePortal2 = "ckan"
 
-        initProcessing(portal1, typePortal1, portal2, typePortal2)
+        resultsFile = initProcessing(portal1, typePortal1, portal2, typePortal2)
+
+        # Store results in xls file
+        resultsFile.save("results.xls")
 
 
 if __name__ == '__main__':

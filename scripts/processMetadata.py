@@ -29,6 +29,7 @@ Given all the metadata from a dataset, this method tokenize it with a series of 
 including removing gender, number, urls, queries, etc.
 It is also necessary the coincidences array in order to discard those who appears more than a threshold
 '''
+# TODO Revisar
 def getTokens(metadata, coincidences):
 
 	# URLs, properties and sparql queries are removed
@@ -139,5 +140,6 @@ def processDatasets(datasets1, datasets2):
 
 		generalRow += 1
 
-	# Store results in xls file
-	wb.save("results.xls")
+	print("Saving results")
+
+	return wb

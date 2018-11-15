@@ -39,6 +39,8 @@ Given the metadata from a specific dataset, it tokenizes and filter its informat
 the words resulted
 '''
 def getNumCoincidences(metadata, coincidences):
+
+	# TODO Revisar método
 	# function to test if something is a noun
 	# is_noun = lambda pos: pos[:2] == 'NN'
 	# do the nlp stuff
@@ -149,7 +151,7 @@ def getPortalInfo(portal, typePortal):
 		# Get info from json object array
 		numDatasets = len(dataJson)
 		totalDatasets += numDatasets
-		print("Number of datasets:",numDatasets)
+		print("Number of datasets:", numDatasets)
 
 		index = 0
 
@@ -194,10 +196,15 @@ def getPortalInfo(portal, typePortal):
 	
 					if resourceFormat.lower() in rdfFormats:
 						dataset.RDFResources.append(resource["url"])
-						# TODO: Check duplicates
 						RDFClasses, RDFProperties = processRDF(resource["url"])
-						dataset.RDFschema["classes"].append(RDFClasses)
-						dataset.RDFschema["properties"].append(RDFProperties)
+
+						for RDFClass in RDFClasses:
+							if RDFClass not in dataset.RDFschema["classes"]:
+								dataset.RDFschema["classes"].append(RDFClass)
+
+						for RDFProperty in RDFProperties:
+							if RDFProperty not in dataset.RDFschema["properties"]:
+								dataset.RDFschema["properties"].append(RDFProperty)
 	
 			elif "dataUri" in element:
 				urlData = element["dataUri"]
