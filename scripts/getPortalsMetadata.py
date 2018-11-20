@@ -36,17 +36,40 @@ def getDatasetsInfoFromList(portal, datasets):
 Given the metadata from a specific dataset, it tokenizes and filter its information, and count the frequency of
 the words resulted
 '''
-def getNumCoincidences(metadata, coincidences):
+def getNumCoincidences(title, metadata, coincidences):
+
+	coincidences[title] = {}
 
 	# Get tokens from all metadata
 	tokenized = tokenize(metadata)
 
 	for noun in tokenized:
 		noun = noun.lower()
-		if noun not in coincidences.keys():
-			coincidences[noun] = 0
+		if noun not in coincidences[title].keys():
+			coincidences[title][noun] = 0
 
-		coincidences[noun] += 1
+		coincidences[title][noun] += 1
+
+
+'''
+Given the frequency of appearance of all words, it calculates the total frequency around all datasets and the
+number of dataset where each word appears
+'''
+def getTotalCoincidences(coincidences):
+	coincidences["totalCoincidences"] = {}
+	coincidences["datasetCoincidences"] = {}
+
+	for dataset in coincidences.keys():
+		if dataset != "totalCoincidences" and dataset != "datasetCoincidences":
+			for word in coincidences[dataset].keys():
+				if word not in coincidences["totalCoincidences"].keys():
+					coincidences["totalCoincidences"][word] = 0
+
+				if word not in coincidences["datasetCoincidences"].keys():
+					coincidences["datasetCoincidences"][word] = 0
+
+				coincidences["totalCoincidences"][word] += coincidences[dataset][word]
+				coincidences["datasetCoincidences"][word] += 1
 
 
 '''
@@ -197,7 +220,7 @@ def getPortalInfo(portal, typePortal):
 
 			# Tokenize all metadata, save only the nouns and store their appearance frequency
 			metadata = dataset.title + " " + dataset.description + " " + str(dataset.keyword) + " " + dataset.theme
-			getNumCoincidences(metadata, coincidences)
+			getNumCoincidences(dataset.title, metadata, coincidences)
 
 			# The datasets that do not have resources in RDF formats or do not follow the DCAT specification are discarded
 			if len(dataset.RDFResources) > 0 and dataset.DCATformat is True:
@@ -212,7 +235,8 @@ def getPortalInfo(portal, typePortal):
 			index += 1
 
 			# TODO Just for test, delete for production
-			if index == 20:
+			if index == 10:
+				finished = True
 				break
 
 		if numDatasets < 1000:
@@ -220,9 +244,6 @@ def getPortalInfo(portal, typePortal):
 		else:
 			page += 1
 
-	# The frequency of words is prorated considering the total number of datasets
-	for key in coincidences:
-		# coincidences[key] = float(coincidences[key])/float(totalDatasets)
-		coincidences[key] = float(coincidences[key])/float(len(datasets))
+	getTotalCoincidences(coincidences)
 
 	return datasets, discarded, coincidences
