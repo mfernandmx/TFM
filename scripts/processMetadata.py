@@ -5,24 +5,7 @@ import json
 from random import uniform
 import xlwt  # lib to write.
 
-import re
-from scripts import normalize
-
-# LDA proccess
-from nltk.tokenize import RegexpTokenizer
-from nltk.stem import SnowballStemmer
-
-# import nltk
-from nltk.corpus import stopwords
-# nltk.download('stopwords')
-stop_words = stopwords.words('spanish')
-
-'''
-Given a string, return true if it contains numbers. False if not
-'''
-def hasNumbers(inputString):
-	return bool(re.search(r'\d', inputString))
-
+from scripts.tokenizer import tokenize
 
 '''
 Given all the metadata from a dataset, this method tokenize it with a series of process,
@@ -32,36 +15,18 @@ It is also necessary the coincidences array in order to discard those who appear
 # TODO Revisar
 def getTokens(metadata, coincidences):
 
-	# URLs, properties and sparql queries are removed
-	text = re.sub(r'http.+', '', metadata)
-	text = re.sub(r'\w+:\w+', '', text)
-	text = re.sub(r'\?\w+', '', text)
-
-	# Tokenize and normalize the tokens
-	tokenizer = RegexpTokenizer(r'\w+')
-	tokenized = text.split(" ")
-
-	aux = [normalize.normalizar(token) for token in tokenized]
-	tokenized = tokenizer.tokenize(str(aux))
+	# Get tokens from all metadata
+	tokenized = tokenize(metadata)
 
 	# Repeated words are removed
 	tokens_without_duplicates = list(set(tokenized))
 
-	# Stop words are removed (stop words such as "the", "a", "an", "in")
-	stopped_tokens = [i for i in tokens_without_duplicates if i not in stop_words]
-
-	# Numbers are removed
-	words_without_numbers = [i for i in stopped_tokens if not hasNumbers(str(i))]
-
 	# Remove those words which occurrence frequency is over 50%
-	key_words = [i for i in words_without_numbers if (i in coincidences and coincidences[i] < 0.5)]
-
-	# Removing gender and number from words
-	p_stemmer = SnowballStemmer('spanish')
-	texts = [p_stemmer.stem(i) for i in key_words]
+	key_words = [i for i in tokens_without_duplicates if (i in coincidences and coincidences[i] < 0.5)]
 
 	# Iterate over every token checking if it is contained in another, removing the longest one
-	end_tokens = list(texts)
+	end_tokens = list(key_words)
+	'''
 	for i in end_tokens:
 		aux = list(end_tokens)
 		aux.remove(i)
@@ -69,7 +34,7 @@ def getTokens(metadata, coincidences):
 			if i in j:
 				end_tokens.remove(j)
 				print("Removing", j, "from", i)
-
+	'''
 	return end_tokens
 
 

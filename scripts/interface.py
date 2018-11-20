@@ -1,7 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from flask import Flask, render_template, flash, request, abort, jsonify
+from flask import Flask, render_template, flash, request, abort, redirect, url_for, make_response, send_file
+from flask import jsonify
 from wtforms import Form, validators, StringField, SelectField
 
 from scripts.init import initProcessing
@@ -28,30 +29,35 @@ def page_not_found():
 def home():
     form = ReusableForm(request.form)
 
-    print(form.errors)
+    print("Errors:", form.errors)
 
     if request.method == 'POST':
         portal1 = request.form['portal1']
         portal2 = request.form['portal2']
         typePortal1 = request.form['type1']
         typePortal2 = request.form['type2']
-        print(portal1, portal2, typePortal1, typePortal2)
+        print("Params:", portal1, portal2, typePortal1, typePortal2)
 
         if form.validate():
             flash('Portal 1: ' + portal1 + ' (' + typePortal1 + ')')
             flash('Portal 2: ' + portal2 + ' (' + typePortal2 + ')')
 
-            # resultsFile = initProcessing(request.json["portal1"], typePortal1, request.json["portal2"], typePortal2)
+            # resultsFile = initProcessing(portal1, typePortal1, portal2, typePortal2)
 
             # TODO Return results
+
+            # return redirect(url_for('.results', messages=resultsFile))
+            # return redirect('/results', messages=resultsFile)
+
         else:
             flash('All the form fields are required. ')
 
     return render_template("index.html", form=form)
 
 @app.route('/api', methods=['GET', 'POST'])
-def hello():
+def api():
     if request.method == 'POST':
+
         if not request.json or 'portal1' not in request.json or 'portal2' not in request.json:
             abort(400)
 
@@ -62,12 +68,17 @@ def hello():
             typePortal1 = request.json["type1"]
 
         if "type2" in request.json:
-            typePortal2 = request.json["type1"]
+            typePortal2 = request.json["type2"]
 
         # resultsFile = initProcessing(request.json["portal1"], typePortal1, request.json["portal2"], typePortal2)
 
+        # response = make_response(resultsFile)
+        # response.headers['content-type'] = 'application/vnd.ms-excel'
+
         # TODO Return results
         return jsonify(request.json)
+        # return send_file(resultsFile, attachment_filename="results.xls", as_attachment=True)
+        # return response
 
     elif request.method == 'GET':
         return 'Welcome to the API service. Please, do a POST request on this same url, with the following parameters structure: ' \

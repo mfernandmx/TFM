@@ -7,9 +7,7 @@ import json
 
 from objects.Dataset import Dataset
 from scripts.getRDFProperties import processRDF
-from nltk.tokenize import RegexpTokenizer
-import re
-from scripts import normalize
+from scripts.tokenizer import tokenize
 
 # TODO: Test more rdf types
 rdfFormats = ["rdf"]
@@ -40,34 +38,8 @@ the words resulted
 '''
 def getNumCoincidences(metadata, coincidences):
 
-	# TODO Revisar método
-	# function to test if something is a noun
-	# is_noun = lambda pos: pos[:2] == 'NN'
-	# do the nlp stuff
-	# tokenized = nltk.word_tokenize(metadata)
-
-	text = re.sub(r'http.+', '', metadata)
-	text = re.sub(r'\w+:\w+', '', text)
-	text = re.sub(r'\?\w+', '', text)
-
-	# \w+:\/{2}[\d\w-]+(\.[\d\w-]+)*(?:(?:\/[^\s/]*))*
-	# print(text)
-	tokenizer = RegexpTokenizer(r'\w+')
-	# raw = normalizar.normalizar(text)
-	# print(raw)
-	tokenized = text.split(" ")
-
-	aux = [normalize.normalizar(token) for token in tokenized]
-
-	tokenized = tokenizer.tokenize(str(aux))
-
-	# pos = [(word, pos) for (word, pos) in nltk.pos_tag(tokenized)]
-	# print poss
-	# print(aux)
-
-	# nouns = [word for (word, pos) in nltk.pos_tag(tokenized) if len(word) > 2]
-	# print(nouns)
-	# print(tokenized)
+	# Get tokens from all metadata
+	tokenized = tokenize(metadata)
 
 	for noun in tokenized:
 		noun = noun.lower()
@@ -146,7 +118,12 @@ def getPortalInfo(portal, typePortal):
 		'''
 		if typePortal == "ckan":
 			print("Downloading resources")
-			dataJson = getDatasetsInfoFromList(portal, dataJson)
+			try:
+				dataJson = getDatasetsInfoFromList(portal, dataJson)
+			except Exception as e:
+				print(e)
+				print("Error, portal type does not match. ", sys.exc_info()[0])
+				sys.exit(0)
 
 		# Get info from json object array
 		numDatasets = len(dataJson)
@@ -245,6 +222,7 @@ def getPortalInfo(portal, typePortal):
 
 	# The frequency of words is prorated considering the total number of datasets
 	for key in coincidences:
-		coincidences[key] = float(coincidences[key])/float(totalDatasets)
+		# coincidences[key] = float(coincidences[key])/float(totalDatasets)
+		coincidences[key] = float(coincidences[key])/float(len(datasets))
 
 	return datasets, discarded, coincidences

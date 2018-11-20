@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-def normalizar(word):
+def normalize(word):
 	result = word.lower()
 	result = result.replace(u'á', u'a')
 	result = result.replace(u'ά', u'a')
