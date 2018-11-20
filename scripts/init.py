@@ -5,7 +5,9 @@ from scripts.processMetadata import processDatasets
 import json
 
 def initProcessing(portal1, typePortal1, portal2, typePortal2):
+
     # Starting data obtaining
+    print(portal1, typePortal1, portal2, typePortal2)
 
     datasets1, discarded1, coincidences1 = getPortalInfo(portal1, typePortal1)
 

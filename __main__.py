@@ -9,8 +9,8 @@ def main():
     # Example parameters for command line
     # http://opendata.caceres.es/api/action/package_list https://data.cityofchicago.org/api/views/metadata/v1 ckan socrata
 
-    # Example POST params for API
-    # {"portal1": "http://opendata.caceres.es/api/action/package_list", "type1":"ckan", "portal2": "https://data.cityofchicago.org/api/views/metadata/v1", "type2": "socrata"}
+    # Example GET params for API
+    # /api?portal1=http%3A%2F%2Fopendata.caceres.es%2Fapi%2Faction%2Fpackage_list&portal2=https%3A%2F%2Fdata.cityofchicago.org%2Fapi%2Fviews%2Fmetadata%2Fv1&type1=ckan&type2=socrata
 
     if len(sys.argv) < 3:
         print('Error, two portals are required. Optionally, the open data portal type can be included (ckan, socrata)')

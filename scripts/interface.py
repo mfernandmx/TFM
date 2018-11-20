@@ -1,11 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from flask import Flask, render_template, flash, request, abort, redirect, url_for, make_response, send_file
+from flask import Flask, render_template, flash, request, abort, Response, redirect, url_for, make_response, send_file
 from flask import jsonify
 from wtforms import Form, validators, StringField, SelectField
 
 from scripts.init import initProcessing
+
+from io import BytesIO
+from werkzeug.datastructures import Headers
+import mimetypes
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -54,32 +58,45 @@ def home():
 
     return render_template("index.html", form=form)
 
-@app.route('/api', methods=['GET', 'POST'])
+@app.route('/api', methods=['GET'])
 def api():
-    if request.method == 'POST':
 
-        if not request.json or 'portal1' not in request.json or 'portal2' not in request.json:
-            abort(400)
+    if request.method == 'GET':
+        portal1 = request.args.get('portal1')
+        portal2 = request.args.get('portal2')
 
-        typePortal1 = "ckan"
-        typePortal2 = "ckan"
+        if portal1 is not None and portal1 != "" and portal2 is not None and portal2 != "":
 
-        if "type1" in request.json:
-            typePortal1 = request.json["type1"]
+            typePortal1 = "ckan"
+            typePortal2 = "ckan"
 
-        if "type2" in request.json:
-            typePortal2 = request.json["type2"]
+            if request.args.get('type1') is not None and request.args.get('portal1') != "":
+                typePortal1 = request.args.get('type1')
 
-        # resultsFile = initProcessing(request.json["portal1"], typePortal1, request.json["portal2"], typePortal2)
+            if request.args.get('type2') is not None and request.args.get('type2') != "":
+                typePortal2 = request.args.get('type2')
 
-        # response = make_response(resultsFile)
-        # response.headers['content-type'] = 'application/vnd.ms-excel'
+            resultsFile = initProcessing(portal1, typePortal1, portal2, typePortal2)
 
-        # TODO Return results
-        return jsonify(request.json)
-        # return send_file(resultsFile, attachment_filename="results.xls", as_attachment=True)
-        # return response
+            # Create an in-memory output file for the workbook.
+            output = BytesIO()
+            resultsFile.save(output)
 
-    elif request.method == 'GET':
-        return 'Welcome to the API service. Please, do a POST request on this same url, with the following parameters structure: ' \
-               '{"portal1": "url_portal_1", "type1":"type_portal_1", "portal2": "url_portal_2", "type2": "type_portal_2"}'
+            # Rewind the buffer.
+            output.seek(0)
+
+            # Set filname and mimetype
+            fileName = 'results.xls'
+            mimetype_tuple = mimetypes.guess_type(fileName)
+
+            h = Headers()
+            h.add('Content-Disposition', 'attachment', filename=fileName)
+
+            def generate():
+                yield output.read()
+
+            return Response(generate(), headers=h, mimetype=mimetype_tuple[0])
+
+        else:
+            return 'Welcome to the API service. Please, do a GET request on this same url, with the following parameters structure: ' \
+                   '?portal1=url_portal_1&portal2=url_portal_2{&type1=type_portal_1&type2=type_portal_2}'

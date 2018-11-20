@@ -3,7 +3,7 @@
 
 import re
 
-from scripts.normalize import normalize
+from scripts.normalizer import normalize
 
 # LDA proccess
 from nltk.tokenize import RegexpTokenizer
