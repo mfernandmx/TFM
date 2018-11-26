@@ -3,7 +3,6 @@
 
 import json
 from random import uniform
-import xlwt  # lib to write.
 
 from scripts.tokenizer import tokenize
 
@@ -39,7 +38,7 @@ def getTokens(metadata, coincidences):
 
 
 '''
-Given all datasets' metadata from two open data portals, it creates and XLS file with likeness value between all of them
+Given all datasets' metadata from two open data portals, it creates and JSON object with likeness value between all of them
 '''
 def processDatasets(datasets1, datasets2):
 
@@ -52,27 +51,17 @@ def processDatasets(datasets1, datasets2):
 	with open("./coincidences2.json") as jsonData2:
 		coincidences2 = json.load(jsonData2)
 
-	# Create xls file
-	wb = xlwt.Workbook(encoding="utf-8")
-	generalSheet = wb.add_sheet("General", cell_overwrite_ok=True)
-	generalRow = 0
+	generalId = 0
+
+	results = {}
 
 	# Iterate over all datasets
 	for dataset1 in datasets1:
 
-		generalColumn = 0
-
-		generalSheet.write(generalRow, generalColumn, generalRow)
-		generalColumn += 1
-		generalSheet.write(generalRow, generalColumn, dataset1.title)
+		results[str(generalId)] = {"title": dataset1.title, "rdfs": [], "results": []}
 
 		for RDFResource in dataset1.RDFResources:
-			generalColumn += 1
-			generalSheet.write(generalRow, generalColumn, RDFResource)
-
-		sheet = wb.add_sheet(str(generalRow), cell_overwrite_ok=True)
-
-		row = 0
+			results[str(generalId)]["rdfs"].append(RDFResource)
 
 		# Get tokens from metadata
 		metadata1 = dataset1.title + " " + dataset1.identifier + " " + str(
@@ -80,8 +69,6 @@ def processDatasets(datasets1, datasets2):
 		tokens1 = getTokens(metadata1, coincidences1)
 
 		for dataset2 in datasets2:
-
-			column = 0
 
 			# Get tokens from metadata
 			metadata2 = dataset2.title + " " + dataset2.identifier + " " + str(
@@ -92,19 +79,13 @@ def processDatasets(datasets1, datasets2):
 			# likenessValue = getLikenessValue(tokens1, tokens2)
 			likenessValue = uniform(0.0, 1.0)
 
-			# Write in xls file
-			sheet.write(row, column, dataset2.title)
-			column += 1
-			sheet.write(row, column, likenessValue)
+			results[str(generalId)]["results"].append({"title": dataset2.title, "value": likenessValue, "rdfs": []})
 
 			for RDFResource in dataset2.RDFResources:
-				column += 1
-				sheet.write(row, column, RDFResource)
+				results[str(generalId)]["results"][len(results[str(generalId)]["results"]) - 1]["rdfs"].append(RDFResource)
 
-			row += 1
+		generalId += 1
 
-		generalRow += 1
+	print("Sending results")
 
-	print("Saving results")
-
-	return wb
+	return results

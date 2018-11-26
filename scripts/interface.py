@@ -1,12 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from flask import Flask, render_template, flash, request, Response, redirect, url_for
+from flask import Flask, render_template, flash, request, Response, redirect, url_for, session
 from wtforms import Form, validators, StringField, SelectField
 
 import json
 
 from scripts.init import initProcessing
+from scripts.JSONtoXLS import JSONtoXLS
 
 from io import BytesIO
 from werkzeug.datastructures import Headers
@@ -61,13 +62,21 @@ def results():
         params = json.loads(params)
         print(params)
 
-        resultsFile, executionTime = initProcessing(params["portal1"], params["type1"], params["portal2"], params["type2"])
-
+        resultsJSON, executionTime = initProcessing(params["portal1"], params["type1"], params["portal2"], params["type2"])
+        # resultsFile = JSONtoXLS(resultsJSON)
+        # session['resultsFile'] = resultsFile
         # TODO Return results
         # return redirect(url_for('.results', messages=resultsFile))
         # return redirect('/results', messages=resultsFile)
 
         return render_template("results.html", time=executionTime)
+
+@app.route("/download", methods=['GET'])
+def download():
+    print("Download")
+
+    # TODO
+    return ""
 
 @app.route('/api', methods=['GET'])
 def api():
@@ -87,7 +96,9 @@ def api():
             if request.args.get('type2') is not None and request.args.get('type2') != "":
                 typePortal2 = request.args.get('type2')
 
-            resultsFile, executionTime = initProcessing(portal1, typePortal1, portal2, typePortal2)
+            resultsJSON, executionTime = initProcessing(portal1, typePortal1, portal2, typePortal2)
+            # TODO Extra parameter for JSON or XLS
+            resultsFile = JSONtoXLS(resultsJSON)
 
             # Create an in-memory output file for the workbook.
             output = BytesIO()

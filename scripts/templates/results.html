@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <title>Results</title>
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     </head>
     <body>
         <h1>Emparejamiento de datasets con técnicas semánticas</h1>
@@ -11,20 +12,17 @@
         <div>
             <h3>Resultados</h3>
             <p>Tiempo de ejecución: {{ time }}</p>
+            <form>
+                <a href="#" id="downloadButton"><button>Descargar resultados</button></a>
+            </form>
         </div>
-
-        <!--div>
-            <h3>Resultados</h3>
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <p>Datos introducidos:</p>
-                <ul>
-                    {% for message in messages %}
-                        <li>{{ message[1] }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
-        </div-->
+        <script type=text/javascript>
+                $(function() {
+                  $('a#downloadButton').bind('click', function() {
+                    $.getJSON('/download', function(data) {});
+                    return false;
+                  });
+                });
+        </script>
     </body>
 </html>

@@ -3,6 +3,7 @@ import sys
 
 from scripts.interface import app
 from scripts.init import initProcessing
+from scripts.JSONtoXLS import JSONtoXLS
 
 def main():
 
@@ -36,7 +37,9 @@ def main():
             typePortal1 = "ckan"
             typePortal2 = "ckan"
 
-        resultsFile, executionTime = initProcessing(portal1, typePortal1, portal2, typePortal2)
+        resultsJSON, executionTime = initProcessing(portal1, typePortal1, portal2, typePortal2)
+        # TODO Extra parameter for JSON or XLS
+        resultsFile = JSONtoXLS(resultsJSON)
 
         # Store results in xls file
         resultsFile.save("results.xls")

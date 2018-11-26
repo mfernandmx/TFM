@@ -34,9 +34,9 @@ def initProcessing(portal1, typePortal1, portal2, typePortal2):
     # It takes as first argument the array with less number of datasets, in order to create less sheets on the results file
 
     if len(datasets1) <= len(datasets2):
-        resultsFile = processDatasets(datasets1, datasets2)
+        resultsJSON = processDatasets(datasets1, datasets2)
     else:
-        resultsFile = processDatasets(datasets2, datasets1)
+        resultsJSON = processDatasets(datasets2, datasets1)
 
     # TODO Return statistics
     print("Execution finished")
@@ -45,4 +45,4 @@ def initProcessing(portal1, typePortal1, portal2, typePortal2):
     executionTime = end - start
     executionTime = time.strftime('%H:%M:%S', time.gmtime(executionTime))
 
-    return resultsFile, executionTime
+    return resultsJSON, executionTime
