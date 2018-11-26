@@ -1,9 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from flask import Flask, render_template, flash, request, abort, Response, redirect, url_for, make_response, send_file
-from flask import jsonify
+from flask import Flask, render_template, flash, request, Response, redirect, url_for
 from wtforms import Form, validators, StringField, SelectField
+
+import json
 
 from scripts.init import initProcessing
 
@@ -43,20 +44,30 @@ def home():
         print("Params:", portal1, portal2, typePortal1, typePortal2)
 
         if form.validate():
-            flash('Portal 1: ' + portal1 + ' (' + typePortal1 + ')')
-            flash('Portal 2: ' + portal2 + ' (' + typePortal2 + ')')
-
-            # resultsFile = initProcessing(portal1, typePortal1, portal2, typePortal2)
-
-            # TODO Return results
-
-            # return redirect(url_for('.results', messages=resultsFile))
-            # return redirect('/results', messages=resultsFile)
+            # TODO Loader
+            params = json.dumps({"portal1": portal1, "portal2": portal2, "type1": typePortal1, "type2": typePortal2})
+            return redirect(url_for('.results', params=params))
 
         else:
-            flash('All the form fields are required. ')
+            flash('All the form fields are required.')
 
     return render_template("index.html", form=form)
+
+
+@app.route("/results", methods=['GET'])
+def results():
+    if request.method == 'GET':
+        params = request.args['params']
+        params = json.loads(params)
+        print(params)
+
+        resultsFile, executionTime = initProcessing(params["portal1"], params["type1"], params["portal2"], params["type2"])
+
+        # TODO Return results
+        # return redirect(url_for('.results', messages=resultsFile))
+        # return redirect('/results', messages=resultsFile)
+
+        return render_template("results.html", time=executionTime)
 
 @app.route('/api', methods=['GET'])
 def api():
@@ -76,7 +87,7 @@ def api():
             if request.args.get('type2') is not None and request.args.get('type2') != "":
                 typePortal2 = request.args.get('type2')
 
-            resultsFile = initProcessing(portal1, typePortal1, portal2, typePortal2)
+            resultsFile, executionTime = initProcessing(portal1, typePortal1, portal2, typePortal2)
 
             # Create an in-memory output file for the workbook.
             output = BytesIO()

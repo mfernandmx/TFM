@@ -3,8 +3,11 @@ from scripts.getPortalsMetadata import getPortalInfo
 from scripts.processMetadata import processDatasets
 
 import json
+import time
 
 def initProcessing(portal1, typePortal1, portal2, typePortal2):
+
+    start = time.time()
 
     # Starting data obtaining
     print(portal1, typePortal1, portal2, typePortal2)
@@ -38,4 +41,8 @@ def initProcessing(portal1, typePortal1, portal2, typePortal2):
     # TODO Return statistics
     print("Execution finished")
 
-    return resultsFile
+    end = time.time()
+    executionTime = end - start
+    executionTime = time.strftime('%H:%M:%S', time.gmtime(executionTime))
+
+    return resultsFile, executionTime

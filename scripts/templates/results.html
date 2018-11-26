@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Results</title>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    </head>
+    <body>
+        <h1>Emparejamiento de datasets con técnicas semánticas</h1>
+        <h2>Marcos Fernández Sellers</h2>
+        <div>
+            <h3>Resultados</h3>
+            <p>Tiempo de ejecución: {{ time }}</p>
+        </div>
+
+        <!--div>
+            <h3>Resultados</h3>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <p>Datos introducidos:</p>
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message[1] }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        </div-->
+    </body>
+</html>

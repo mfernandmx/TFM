@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="UTF-8">
         <title>Inicio</title>
-
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     </head>
     <body>
@@ -30,19 +30,15 @@
                     <input type="submit" value="Ejecutar" />
                 </div>
             </form>
-        </div>
-        <div>
-            <h3>Resultados</h3>
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <p>Datos introducidos:</p>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
                 <ul>
                     {% for message in messages %}
                         <li>{{ message[1] }}</li>
                     {% endfor %}
                 </ul>
-            {% endif %}
-        {% endwith %}
+                {% endif %}
+            {% endwith %}
         </div>
     </body>
 </html>

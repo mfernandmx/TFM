@@ -36,7 +36,7 @@ def main():
             typePortal1 = "ckan"
             typePortal2 = "ckan"
 
-        resultsFile = initProcessing(portal1, typePortal1, portal2, typePortal2)
+        resultsFile, executionTime = initProcessing(portal1, typePortal1, portal2, typePortal2)
 
         # Store results in xls file
         resultsFile.save("results.xls")
