@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from flask import Flask, render_template, flash, request, Response, redirect, url_for, session
+from flask import Flask, render_template, flash, request, Response, redirect, url_for, session, jsonify
 from wtforms import Form, validators, StringField, SelectField
 
 import json
@@ -45,7 +45,7 @@ def home():
         print("Params:", portal1, portal2, typePortal1, typePortal2)
 
         if form.validate():
-            # TODO Loader
+            # TODO Add loader to page
             params = json.dumps({"portal1": portal1, "portal2": portal2, "type1": typePortal1, "type2": typePortal2})
             return redirect(url_for('.results', params=params))
 
@@ -61,22 +61,53 @@ def results():
         params = request.args['params']
         params = json.loads(params)
         print(params)
+        # TODO Error handler
 
         resultsJSON, executionTime = initProcessing(params["portal1"], params["type1"], params["portal2"], params["type2"])
-        # resultsFile = JSONtoXLS(resultsJSON)
-        # session['resultsFile'] = resultsFile
-        # TODO Return results
-        # return redirect(url_for('.results', messages=resultsFile))
-        # return redirect('/results', messages=resultsFile)
+        session['resultsJSON'] = resultsJSON
 
         return render_template("results.html", time=executionTime)
 
 @app.route("/download", methods=['GET'])
 def download():
-    print("Download")
 
-    # TODO
-    return ""
+    if "resultsJSON" in session:
+        resultsJSON = session["resultsJSON"]
+
+        fileFormat = request.args.get('format')
+
+        if fileFormat == "json":
+            return jsonify(resultsJSON)
+        elif fileFormat == "xls":
+            resultsFile = JSONtoXLS(resultsJSON)
+
+            # Create an in-memory output file for the workbook.
+            output = BytesIO()
+            resultsFile.save(output)
+
+            # Rewind the buffer.
+            output.seek(0)
+
+            # Set filname and mimetype
+            fileName = 'results.xls'
+            mimetype_tuple = mimetypes.guess_type(fileName)
+
+            h = Headers()
+            h.add('Content-Disposition', 'attachment', filename=fileName)
+
+            def generate():
+                yield output.read()
+
+            print("XLS", mimetype_tuple[0])
+            # TODO Not working on javascript side
+            return Response(generate(), headers=h, mimetype=mimetype_tuple[0])
+
+        else:
+            # TODO
+            return ""
+    else:
+        # TODO
+        return ""
 
 @app.route('/api', methods=['GET'])
 def api():
@@ -121,4 +152,4 @@ def api():
 
         else:
             return 'Welcome to the API service. Please, do a GET request on this same url, with the following parameters structure: ' \
-                   '?portal1=url_portal_1&portal2=url_portal_2{&type1=type_portal_1&type2=type_portal_2}'
+                   '?portal1=url_portal_1&portal2=url_portal_2 {&type1=type_portal_1&type2=type_portal_2}'
