@@ -26,9 +26,8 @@ class ReusableForm(Form):
     portal2 = StringField('URL Portal 2:', validators=[validators.required()], default='https://data.cityofchicago.org/api/views/metadata/v1')
     type2 = SelectField('Portal Type 2', choices=[('ckan', 'ckan'), ('socrata', 'socrata')], default='socrata')
 
-# TODO Diferenciar entre API e interfaz
 @app.errorhandler(404)
-def page_not_found():
+def page_not_found(arg):
     return render_template('404.html'), 404
 
 @app.route("/", methods=['GET', 'POST'])

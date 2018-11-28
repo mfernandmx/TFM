@@ -14,7 +14,7 @@ def main():
     # http://opendata.caceres.es/api/action/package_list https://data.cityofchicago.org/api/views/metadata/v1 ckan socrata --format xls
 
     # Example GET params for API
-    # /api?portal1=http%3A%2F%2Fopendata.caceres.es%2Fapi%2Faction%2Fpackage_list&portal2=https%3A%2F%2Fdata.cityofchicago.org%2Fapi%2Fviews%2Fmetadata%2Fv1&type1=ckan&type2=socrata
+    # /api?portal1=http%3A%2F%2Fopendata.caceres.es%2Fapi%2Faction%2Fpackage_list&portal2=https%3A%2F%2Fdata.cityofchicago.org%2Fapi%2Fviews%2Fmetadata%2Fv1&type1=ckan&type2=socrata&format=xls
 
     if len(sys.argv) < 2:
         print('Error, two portals are required. Optionally, the open data portal type can be included (ckan, socrata)')

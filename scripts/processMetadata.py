@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import json
 from random import uniform
 
 from scripts.tokenizer import tokenize
@@ -40,16 +39,9 @@ def getTokens(metadata, coincidences):
 '''
 Given all datasets' metadata from two open data portals, it creates and JSON object with likeness value between all of them
 '''
-def processDatasets(datasets1, datasets2):
+def processDatasets(datasets1, datasets2, coincidences1, coincidences2):
 
 	print("Processing datasets")
-	print("Obtaining words occurrence frequency")
-
-	with open("./coincidences1.json") as jsonData1:
-		coincidences1 = json.load(jsonData1)
-
-	with open("./coincidences2.json") as jsonData2:
-		coincidences2 = json.load(jsonData2)
 
 	generalId = 0
 
