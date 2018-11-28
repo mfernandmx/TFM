@@ -1,6 +1,7 @@
 
 import sys
 
+from objects.Exceptions import PortalTypeError, PortalNotWorking
 from scripts.interface import app
 from scripts.init import initProcessing
 from scripts.JSONtoXLS import JSONtoXLS
@@ -17,7 +18,7 @@ def main():
     # /api?portal1=http%3A%2F%2Fopendata.caceres.es%2Fapi%2Faction%2Fpackage_list&portal2=https%3A%2F%2Fdata.cityofchicago.org%2Fapi%2Fviews%2Fmetadata%2Fv1&type1=ckan&type2=socrata&format=xls
 
     if len(sys.argv) < 2:
-        print('Error, two portals are required. Optionally, the open data portal type can be included (ckan, socrata)')
+        print('Two portals are required. Optionally, the open data portal type can be included (ckan, socrata)')
         print('To execute the script: $python ', sys.argv[0], ' url_portal_1 url_portal_2 {ckan | socrata} {ckan | socrata} {--format FORMAT}')
         print('Starting web interface')
         app.run(debug=True)
@@ -46,7 +47,14 @@ def main():
             typePortal1 = "ckan"
             typePortal2 = "ckan"
 
-        resultsJSON, executionTime = initProcessing(portal1, typePortal1, portal2, typePortal2)
+        try:
+            resultsJSON, executionTime = initProcessing(portal1, typePortal1, portal2, typePortal2)
+        except PortalTypeError as e:
+            print(e)
+            sys.exit(0)
+        except PortalNotWorking as e:
+            print(e)
+            sys.exit(0)
 
         if args.format is not None and args.format == "json":
             jsonObject = json.dumps(resultsJSON)

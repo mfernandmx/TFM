@@ -1,4 +1,5 @@
 
+from objects.Exceptions import PortalTypeError, PortalNotWorking
 from scripts.getPortalsMetadata import getPortalInfo
 from scripts.processMetadata import processDatasets
 
@@ -12,7 +13,12 @@ def initProcessing(portal1, typePortal1, portal2, typePortal2):
     # Starting data obtaining
     print(portal1, typePortal1, portal2, typePortal2)
 
-    datasets1, discarded1, coincidences1 = getPortalInfo(portal1, typePortal1)
+    try:
+        datasets1, discarded1, coincidences1 = getPortalInfo(portal1, typePortal1)
+    except PortalTypeError:
+        raise
+    except PortalNotWorking:
+        raise
 
     # TODO Remove coincidences to file
     jsonObject = json.dumps(coincidences1)
@@ -20,7 +26,12 @@ def initProcessing(portal1, typePortal1, portal2, typePortal2):
     f.write(jsonObject)
     f.close()
 
-    datasets2, discarded2, coincidences2 = getPortalInfo(portal2, typePortal2)
+    try:
+        datasets2, discarded2, coincidences2 = getPortalInfo(portal2, typePortal2)
+    except PortalTypeError:
+        raise
+    except PortalNotWorking:
+        raise
 
     jsonObject = json.dumps(coincidences2)
     f = open("coincidences2.json", "w")

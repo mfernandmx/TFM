@@ -6,6 +6,7 @@ import requests
 import json
 
 from objects.Dataset import Dataset
+from objects.Exceptions import PortalTypeError, PortalNotWorking
 from scripts.getRDFProperties import processRDF
 from scripts.tokenizer import tokenize
 
@@ -107,8 +108,7 @@ def getPortalInfo(portal, typePortal):
 		theme = "category"
 		resources = ""
 	else:
-		print("Error, portal type not recognized - " + typePortal)
-		sys.exit(0)
+		raise PortalTypeError("Error, portal type not recognized -> " + typePortal)
 
 	print("Variables: ", title, identifier, description, language, keyword, theme)
 
@@ -132,8 +132,7 @@ def getPortalInfo(portal, typePortal):
 			print("Metadata downloaded")
 		except Exception as e:
 			print(e)
-			print("Error, portal \"" + portal + "\" does not work. ", sys.exc_info()[0])
-			sys.exit(0)
+			raise PortalNotWorking("Error, portal \"" + portal + "\" does not work. ")
 
 		'''
 		CKAN open data portals returns a list with the identifiers of all datasets, and it is needed to do a request

@@ -6,6 +6,7 @@ from wtforms import Form, validators, StringField, SelectField
 
 import json
 
+from objects.Exceptions import PortalTypeError, PortalNotWorking
 from scripts.init import initProcessing
 from scripts.JSONtoXLS import JSONtoXLS
 
@@ -60,12 +61,22 @@ def results():
         params = request.args['params']
         params = json.loads(params)
         print(params)
-        # TODO Error handler
 
-        resultsJSON, executionTime = initProcessing(params["portal1"], params["type1"], params["portal2"], params["type2"])
+        resultsJSON = {}
+
+        try:
+            resultsJSON, executionTime = initProcessing(params["portal1"], params["type1"], params["portal2"], params["type2"])
+            response = render_template("results.html", time=executionTime)
+        except PortalTypeError as e:
+            # TODO Error page
+            response = str(e), 400
+        except PortalNotWorking as e:
+            # TODO Error page
+            response = str(e), 400
+
         session['resultsJSON'] = resultsJSON
 
-        return render_template("results.html", time=executionTime)
+        return response
 
 @app.route("/download", methods=['GET'])
 def download():
@@ -127,15 +138,22 @@ def api():
             if request.args.get('type2') is not None and request.args.get('type2') != "":
                 typePortal2 = request.args.get('type2')
 
-            resultsJSON, executionTime = initProcessing(portal1, typePortal1, portal2, typePortal2)
-
             response = None
+            resultsJSON = {}
 
-            if request.args.get('format') is not None and request.args.get('format') != "":
-                resultsFormat = request.args.get('format')
+            try:
+                resultsJSON, executionTime = initProcessing(portal1, typePortal1, portal2, typePortal2)
 
-                if resultsFormat == "json":
-                    response = jsonify(resultsJSON)
+                if request.args.get('format') is not None and request.args.get('format') != "":
+                    resultsFormat = request.args.get('format')
+
+                    if resultsFormat == "json":
+                        response = jsonify(resultsJSON)
+
+            except PortalTypeError as e:
+                response = str(e), 400
+            except PortalNotWorking as e:
+                response = str(e), 400
 
             if response is None:
                 resultsFile = JSONtoXLS(resultsJSON)
