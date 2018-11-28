@@ -17,6 +17,8 @@ import mimetypes
 app = Flask(__name__)
 app.config.from_object(__name__)
 
+# TODO Unificar idioma plantillas y mensajes
+
 # TODO: Cambiar y borrar
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 
@@ -29,7 +31,7 @@ class ReusableForm(Form):
 
 @app.errorhandler(404)
 def page_not_found(arg):
-    return render_template('404.html'), 404
+    return render_template('error.html', error="La página solicitada no existe. Revisa que has introducido una url correcta"), 404
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
@@ -45,7 +47,6 @@ def home():
         print("Params:", portal1, portal2, typePortal1, typePortal2)
 
         if form.validate():
-            # TODO Add loader to page
             params = json.dumps({"portal1": portal1, "portal2": portal2, "type1": typePortal1, "type2": typePortal2})
             return redirect(url_for('.results', params=params))
 
@@ -68,11 +69,9 @@ def results():
             resultsJSON, executionTime = initProcessing(params["portal1"], params["type1"], params["portal2"], params["type2"])
             response = render_template("results.html", time=executionTime)
         except PortalTypeError as e:
-            # TODO Error page
-            response = str(e), 400
+            response = render_template('error.html', error=str(e)), 404
         except PortalNotWorking as e:
-            # TODO Error page
-            response = str(e), 400
+            response = render_template('error.html', error=str(e)), 404
 
         session['resultsJSON'] = resultsJSON
 

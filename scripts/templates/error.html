@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Ups!</title>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+        <script src="{{ url_for('static', filename='main.js') }}"></script>
+    </head>
+    <body>
+        <h1>{{ error }}</h1>
+    </body>
+</html>

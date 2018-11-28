@@ -4,6 +4,9 @@
         <meta charset="UTF-8">
         <title>Inicio</title>
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+        <script src="{{ url_for('static', filename='main.js') }}"></script>
     </head>
     <body>
         <h1>Emparejamiento de datasets con técnicas semánticas</h1>
@@ -27,7 +30,7 @@
                 </div>
 
                 <div class="input submit">
-                    <input type="submit" value="Ejecutar" />
+                    <input type="submit" value="Ejecutar" onclick="showInfo();"/>
                 </div>
             </form>
             {% with messages = get_flashed_messages(with_categories=true) %}
@@ -39,6 +42,10 @@
                 </ul>
                 {% endif %}
             {% endwith %}
+        </div>
+        <div id="info" style="display: none">
+            <p>Su petición se está procesando. Esto puede tardar varios minutos</p>
+            <div id="loader"></div>
         </div>
     </body>
 </html>
