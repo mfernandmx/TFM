@@ -71,14 +71,16 @@ def results():
 @app.route("/download", methods=['GET'])
 def download():
 
+    response = None
+
     if "resultsJSON" in session:
         resultsJSON = session["resultsJSON"]
 
         fileFormat = request.args.get('format')
 
         if fileFormat == "json":
-            return jsonify(resultsJSON)
-        elif fileFormat == "xls":
+            response = jsonify(resultsJSON)
+        else:
             resultsFile = JSONtoXLS(resultsJSON)
 
             # Create an in-memory output file for the workbook.
@@ -100,14 +102,13 @@ def download():
 
             print("XLS", mimetype_tuple[0])
             # TODO Not working on javascript side
-            return Response(generate(), headers=h, mimetype=mimetype_tuple[0])
+            response = Response(generate(), headers=h, mimetype=mimetype_tuple[0])
 
-        else:
-            # TODO
-            return ""
     else:
         # TODO
-        return ""
+        print()
+
+    return response
 
 @app.route('/api', methods=['GET'])
 def api():
@@ -128,27 +129,38 @@ def api():
                 typePortal2 = request.args.get('type2')
 
             resultsJSON, executionTime = initProcessing(portal1, typePortal1, portal2, typePortal2)
-            # TODO Extra parameter for JSON or XLS
-            resultsFile = JSONtoXLS(resultsJSON)
 
-            # Create an in-memory output file for the workbook.
-            output = BytesIO()
-            resultsFile.save(output)
+            response = None
 
-            # Rewind the buffer.
-            output.seek(0)
+            if request.args.get('format') is not None and request.args.get('format') != "":
+                resultsFormat = request.args.get('format')
 
-            # Set filname and mimetype
-            fileName = 'results.xls'
-            mimetype_tuple = mimetypes.guess_type(fileName)
+                if resultsFormat == "json":
+                    response = jsonify(resultsJSON)
 
-            h = Headers()
-            h.add('Content-Disposition', 'attachment', filename=fileName)
+            if response is None:
+                resultsFile = JSONtoXLS(resultsJSON)
 
-            def generate():
-                yield output.read()
+                # Create an in-memory output file for the workbook.
+                output = BytesIO()
+                resultsFile.save(output)
 
-            return Response(generate(), headers=h, mimetype=mimetype_tuple[0])
+                # Rewind the buffer.
+                output.seek(0)
+
+                # Set filname and mimetype
+                fileName = 'results.xls'
+                mimetype_tuple = mimetypes.guess_type(fileName)
+
+                h = Headers()
+                h.add('Content-Disposition', 'attachment', filename=fileName)
+
+                def generate():
+                    yield output.read()
+
+                response = Response(generate(), headers=h, mimetype=mimetype_tuple[0])
+
+            return response
 
         else:
             return 'Welcome to the API service. Please, do a GET request on this same url, with the following parameters structure: ' \
