@@ -36,22 +36,16 @@
                 });
             });
         </script>
-        <!--script type=text/javascript>
+        <script type=text/javascript>
             $(function() {
-              $('a#downloadXLS').bind('click', function() {
-                $.get('/download?format=xls', function(data) {
-                    console.log("xls data", data);
-                    var element = document.createElement('a');
-                    element.setAttribute('href', 'data:application/vnd.ms-excel,' + encodeURIComponent(data));
-                    element.setAttribute('download', "results.xls");
-                    element.style.display = 'none';
-                    document.body.appendChild(element);
-                    element.click();
-                    document.body.removeChild(element);
+                $('a#downloadXLS').bind('click', function() {
+                    var link = document.createElement("a");
+                    link.download = "results.xls";
+                    link.href = "/download?format=xls";
+                    link.click();
+                    return false;
                 });
-                return false;
-              });
             });
-        </script-->
+        </script>
     </body>
 </html>

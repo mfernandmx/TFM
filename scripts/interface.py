@@ -69,9 +69,9 @@ def results():
             resultsJSON, executionTime = initProcessing(params["portal1"], params["type1"], params["portal2"], params["type2"])
             response = render_template("results.html", time=executionTime)
         except PortalTypeError as e:
-            response = render_template('error.html', error=str(e)), 404
+            response = render_template('error.html', error=str(e)), 400
         except PortalNotWorking as e:
-            response = render_template('error.html', error=str(e)), 404
+            response = render_template('error.html', error=str(e)), 400
 
         session['resultsJSON'] = resultsJSON
 
@@ -109,12 +109,10 @@ def download():
             def generate():
                 yield output.read()
 
-            print("XLS", mimetype_tuple[0])
-            # TODO Not working on javascript side
             response = Response(generate(), headers=h, mimetype=mimetype_tuple[0])
 
     else:
-        # TODO
+        # TODO ¿Excepción?
         print()
 
     return response
@@ -180,4 +178,4 @@ def api():
 
         else:
             return 'Welcome to the API service. Please, do a GET request on this same url, with the following parameters structure: ' \
-                   '?portal1=url_portal_1&portal2=url_portal_2 {&type1=type_portal_1&type2=type_portal_2}'
+                   '?portal1=url_portal_1&portal2=url_portal_2 {&type1=type_portal_1} {&type2=type_portal_2} {&format=(xls|json)}'
