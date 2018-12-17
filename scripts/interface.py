@@ -22,20 +22,45 @@ app.config.from_object(__name__)
 
 app.config['SECRET_KEY'] = SECRET_KEY
 
-class ReusableForm(Form):
+'''
+Form class where portals and their types will be set by the user
+'''
+class PortalsForm(Form):
     portal1 = StringField('URL Portal 1:', validators=[validators.required()], default='http://opendata.caceres.es/api/action/package_list')
     type1 = SelectField('Portal Type 1', choices=[('ckan', 'ckan'), ('socrata', 'socrata')], default='ckan')
 
     portal2 = StringField('URL Portal 2:', validators=[validators.required()], default='https://data.cityofchicago.org/api/views/metadata/v1')
     type2 = SelectField('Portal Type 2', choices=[('ckan', 'ckan'), ('socrata', 'socrata')], default='socrata')
 
+
+'''
+Method to format the results in order to be shown on the web interface
+'''
+def formatResults(resultsJSON):
+
+    resultsTable = []
+
+    for key, dataset1 in resultsJSON.items():
+        highestSimilarity = 0
+        title1 = dataset1["title"]
+        title2 = ""
+
+        for dataset2 in dataset1["results"]:
+            if dataset2["value"] > highestSimilarity:
+                highestSimilarity = dataset2["value"]
+                title2 = dataset2["title"]
+
+        resultsTable.append({"dataset1": title1, "dataset2": title2, "value": round(highestSimilarity*100, 2)})
+
+    return sorted(resultsTable, key=lambda row: row["value"], reverse=True)
+
 @app.errorhandler(404)
 def page_not_found(arg):
-    return render_template('error.html', error="La página solicitada no existe. Revisa que has introducido una url correcta"), 404
+    return render_template('error.html', error="Page not found. Check that the url is correct"), 404
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
-    form = ReusableForm(request.form)
+    form = PortalsForm(request.form)
 
     print("Errors:", form.errors)
 
@@ -69,7 +94,10 @@ def results():
 
             try:
                 resultsJSON, executionTime = initProcessing(params["portal1"], params["type1"], params["portal2"], params["type2"])
-                response = render_template("results.html", time=executionTime)
+                print(resultsJSON)
+                resultsTable = formatResults(resultsJSON)
+                print(resultsTable)
+                response = render_template("results.html", time=executionTime, results=resultsTable)
             except PortalTypeError as e:
                 response = render_template('error.html', error=str(e)), 400
             except PortalNotWorking as e:

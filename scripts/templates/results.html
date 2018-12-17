@@ -19,6 +19,24 @@
                 <a href="#" id="downloadJSON"><button>Descargar JSON</button></a>
                 <a href="#" id="downloadXLS"><button>Descargar XLS</button></a>
             </form>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dataset Portal 1</th>
+                        <th>Similarity (%)</th>
+                        <th>Dataset Portal 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for result in results %}
+                    <tr>
+                        <td>{{ result["dataset1"] }}</td>
+                        <td>{{ result["value"] }}</td>
+                        <td>{{ result["dataset2"] }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
         <script type=text/javascript>
             $(function() {
