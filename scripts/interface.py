@@ -9,6 +9,7 @@ import json
 from objects.Exceptions import PortalTypeError, PortalNotWorking
 from scripts.init import initProcessing
 from scripts.JSONtoXLS import JSONtoXLS
+from keys import SECRET_KEY
 
 from io import BytesIO
 from werkzeug.datastructures import Headers
@@ -19,8 +20,7 @@ app.config.from_object(__name__)
 
 # TODO Unificar idioma plantillas y mensajes
 
-# TODO: Cambiar y borrar
-app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
+app.config['SECRET_KEY'] = SECRET_KEY
 
 class ReusableForm(Form):
     portal1 = StringField('URL Portal 1:', validators=[validators.required()], default='http://opendata.caceres.es/api/action/package_list')
@@ -59,28 +59,31 @@ def home():
 @app.route("/results", methods=['GET'])
 def results():
     if request.method == 'GET':
-        params = request.args['params']
-        params = json.loads(params)
-        print(params)
 
-        resultsJSON = {}
+        if "params" in request.args:
+            params = request.args['params']
+            params = json.loads(params)
+            print(params)
 
-        try:
-            resultsJSON, executionTime = initProcessing(params["portal1"], params["type1"], params["portal2"], params["type2"])
-            response = render_template("results.html", time=executionTime)
-        except PortalTypeError as e:
-            response = render_template('error.html', error=str(e)), 400
-        except PortalNotWorking as e:
-            response = render_template('error.html', error=str(e)), 400
+            resultsJSON = {}
 
-        session['resultsJSON'] = resultsJSON
+            try:
+                resultsJSON, executionTime = initProcessing(params["portal1"], params["type1"], params["portal2"], params["type2"])
+                response = render_template("results.html", time=executionTime)
+            except PortalTypeError as e:
+                response = render_template('error.html', error=str(e)), 400
+            except PortalNotWorking as e:
+                response = render_template('error.html', error=str(e)), 400
+
+            session['resultsJSON'] = resultsJSON
+
+        else:
+            response = render_template('error.html', error="Error, parameters not set correctly"), 400
 
         return response
 
 @app.route("/download", methods=['GET'])
 def download():
-
-    response = None
 
     if "resultsJSON" in session:
         resultsJSON = session["resultsJSON"]
@@ -112,8 +115,7 @@ def download():
             response = Response(generate(), headers=h, mimetype=mimetype_tuple[0])
 
     else:
-        # TODO ¿Excepción?
-        print()
+        response = render_template('error.html', error="Error, results not loaded properly"), 400
 
     return response
 
