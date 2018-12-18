@@ -3,6 +3,6 @@
 
 from random import uniform
 
-def calculateLikenessValue(tokens1, tokens2):
-	# TODO Pesos
+def calculateLikenessValue(weights1, weights2):
+	# TODO
 	return uniform(0.0, 1.0)

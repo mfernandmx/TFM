@@ -57,6 +57,7 @@ Given the frequency of appearance of all words, it calculates the total frequenc
 number of dataset where each word appears
 '''
 def getTotalCoincidences(coincidences):
+
 	coincidences["totalCoincidences"] = {}
 	coincidences["datasetCoincidences"] = {}
 

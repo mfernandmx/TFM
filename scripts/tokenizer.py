@@ -12,7 +12,7 @@ from nltk.stem import SnowballStemmer
 # import nltk
 # nltk.download('stopwords')
 from nltk.corpus import stopwords
-stop_words = stopwords.words('spanish')
+stop_words = stopwords.words('english')
 
 '''
 Given a string, return true if it contains numbers. False if not
@@ -20,7 +20,7 @@ Given a string, return true if it contains numbers. False if not
 def hasNumbers(inputString):
 	return bool(re.search(r'\d', inputString))
 
-# TODO Comment
+# TODO Comentar - Artículo Julio
 def tokenize(data):
 	# URLs, properties and sparql queries are removed
 	text = re.sub(r'http.+', '', data)
@@ -41,7 +41,7 @@ def tokenize(data):
 	noNumbers = [i for i in aux if not hasNumbers(str(i))]
 
 	# Removing gender and number from words
-	p_stemmer = SnowballStemmer('spanish')
+	p_stemmer = SnowballStemmer('english')
 	tokens = [p_stemmer.stem(i) for i in noNumbers]
 
 	return tokens
