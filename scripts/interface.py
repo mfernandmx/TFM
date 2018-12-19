@@ -26,8 +26,8 @@ app.config['SECRET_KEY'] = SECRET_KEY
 Form class where portals and their types will be set by the user
 '''
 class PortalsForm(Form):
-    portal1 = StringField('URL Portal 1:', validators=[validators.required()], default='http://opendata.caceres.es/api/action/package_list')
-    type1 = SelectField('Portal Type 1', choices=[('ckan', 'ckan'), ('socrata', 'socrata')], default='ckan')
+    portal1 = StringField('URL Portal 1:', validators=[validators.required()], default='https://www.data.act.gov.au/api/views/metadata/v1')
+    type1 = SelectField('Portal Type 1', choices=[('ckan', 'ckan'), ('socrata', 'socrata')], default='socrata')
 
     portal2 = StringField('URL Portal 2:', validators=[validators.required()], default='https://data.cityofchicago.org/api/views/metadata/v1')
     type2 = SelectField('Portal Type 2', choices=[('ckan', 'ckan'), ('socrata', 'socrata')], default='socrata')

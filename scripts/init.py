@@ -46,7 +46,7 @@ def initProcessing(portal1, typePortal1, portal2, typePortal2):
     if len(datasets1) <= len(datasets2):
         resultsJSON = processDatasets(datasets1, datasets2, coincidences1, coincidences2)
     else:
-        resultsJSON = processDatasets(datasets2, datasets1, coincidences1, coincidences2)
+        resultsJSON = processDatasets(datasets2, datasets1, coincidences2, coincidences1)
 
     print("Execution finished")
 
