@@ -1,3 +1,91 @@
+
+
+:root {
+  --bright: rgb(208, 225, 239);
+  --dark: #2a4d69;
+}
+
+body {
+    margin: 0;
+}
+
+/*
+Header
+*/
+
+header {
+    text-align: center;
+    padding: 10px;
+    background: var(--bright);
+    color: var(--dark);
+}
+
+#mainSection h3, #mainSection p{
+    text-align: center;
+    color: var(--dark);
+}
+
+/*
+Input
+*/
+
+#inputForm {
+    margin: auto;
+    width: 530px;
+}
+
+.text, .select {
+    display: inline-block;
+}
+
+.inputContainer {
+    padding: 10px;
+}
+
+#portal1, #portal2 {
+    width: 400px;
+}
+
+#type1, #type2 {
+    width: 100px;
+}
+
+label {
+    display: block;
+    text-align: center;
+}
+
+.submit, .back {
+    margin: auto;
+    width: 110px;
+}
+
+#submitButton, button {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: var(--dark);
+    border: none;
+    color: white;
+    text-align: center;
+    font-size: 15px;
+    padding: 10px;
+    width: 100px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+}
+
+/*
+Info
+*/
+
+#info p {
+    text-align: center;
+    font-size: 125%;
+    color: var(--dark);
+    font-weight: bold;
+}
+
 /*
 Loader
  */
@@ -5,12 +93,12 @@ Loader
 #loader {
     position: absolute;
     left: 50%;
-    top: 75%;
+    top: 55%;
     z-index: 1;
     margin: -75px 0 0 -75px;
-    border: 16px solid black;
     border-radius: 50%;
-    border-top: 16px solid #B71C1C;
+    border: 16px solid var(--dark);
+    border-top-color: var(--bright);
     width: 120px;
     height: 120px;
     -webkit-animation: spin 2s linear infinite;
@@ -25,4 +113,46 @@ Loader
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+/*
+Results
+*/
+
+#buttons {
+    margin: auto;
+    width: 225px;
+}
+
+#tableContainer {
+    margin-top: 20px;
+}
+
+table {
+    margin: auto;
+}
+
+thead {
+    font-size: 125%;
+    background-color: var(--dark);
+    color: white;
+}
+
+td, th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.results-tr:hover {background-color: #ddd;}
+
+.center {
+    text-align: center;
+}
+
+/*
+Footer
+*/
+
+footer {
+    padding-top: 20px;
 }

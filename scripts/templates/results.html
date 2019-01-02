@@ -10,34 +10,47 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     </head>
     <body>
-        <h1>Emparejamiento de datasets con técnicas semánticas</h1>
-        <h2>Marcos Fernández Sellers</h2>
-        <div>
-            <h3>Resultados</h3>
-            <p>Tiempo de ejecución: {{ time }}</p>
-            <form>
-                <a href="#" id="downloadJSON"><button>Descargar JSON</button></a>
-                <a href="#" id="downloadXLS"><button>Descargar XLS</button></a>
-            </form>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Dataset Portal 1</th>
-                        <th>Similarity (%)</th>
-                        <th>Dataset Portal 2</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for result in results %}
-                    <tr>
-                        <td>{{ result["dataset1"] }}</td>
-                        <td>{{ result["value"] }}</td>
-                        <td>{{ result["dataset2"] }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+        <header>
+            <h1>Pairing of datasets with semantic techniques</h1>
+            <h2>Marcos Fernández Sellers - Master's thesis</h2>
+        </header>
+        <div id="mainSection">
+            <h3>Results</h3>
+            <p>Execution Time: {{ time }}</p>
+            <div id="buttons">
+                <form>
+                    <a href="#" id="downloadJSON"><button>Download JSON</button></a>
+                    <a href="#" id="downloadXLS"><button>Download XLS</button></a>
+                </form>
+            </div>
+
+            <div id="tableContainer">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Dataset Portal 1</th>
+                            <th>Similarity (%)</th>
+                            <th>Dataset Portal 2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for result in results %}
+                        <tr class="results-tr">
+                            <td>{{ result["dataset1"] }}</td>
+                            <td class="center">{{ result["value"] }}</td>
+                            <td>{{ result["dataset2"] }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
         </div>
+        <footer>
+            <div class="back">
+                <a href="/"><button>Back to main page</button></a>
+            </div>
+        </footer>
         <script type=text/javascript>
             $(function() {
                 $('a#downloadJSON').bind('click', function() {

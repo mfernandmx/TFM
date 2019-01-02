@@ -9,42 +9,52 @@
         <script src="{{ url_for('static', filename='main.js') }}"></script>
     </head>
     <body>
-        <h1>Emparejamiento de datasets con técnicas semánticas</h1>
-        <h2>Marcos Fernández Sellers</h2>
-        <div>
-            <h3>Datos de entrada</h3>
-            <form action="" method="post">
-                {{ form.csrf }}
+        <header>
+            <h1>Pairing of datasets with semantic techniques</h1>
+            <h2>Marcos Fernández Sellers - Master's thesis</h2>
+        </header>
+        <div id="mainSection">
+            <h3>Input Data</h3>
+            <div id="inputForm">
+                <form action="" method="post">
+                    {{ form.csrf }}
 
-                <div class="input text">
-                    {{ form.portal1.label }} {{ form.portal1 }}
-                </div>
-                <div class="input select">
-                    {{ form.type1.label }} {{ form.type1 }}
-                </div>
-                <div class="input text">
-                    {{ form.portal2.label }} {{ form.portal2 }}
-                </div>
-                <div class="input select">
-                    {{ form.type2.label }} {{ form.type2 }}
-                </div>
+                    <div class="inputContainer">
+                        <div class="input text">
+                            {{ form.portal1.label }} {{ form.portal1 }}
+                        </div>
+                        <div class="input select">
+                            {{ form.type1.label }} {{ form.type1 }}
+                        </div>
+                    </div>
 
-                <div class="input submit">
-                    <input type="submit" value="Ejecutar" onclick="showInfo();"/>
-                </div>
-            </form>
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                <ul>
-                    {% for message in messages %}
-                        <li>{{ message[1] }}</li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-            {% endwith %}
+                    <div class="inputContainer">
+                        <div class="input text">
+                            {{ form.portal2.label }} {{ form.portal2 }}
+                        </div>
+                        <div class="input select">
+                            {{ form.type2.label }} {{ form.type2 }}
+                        </div>
+                    </div>
+
+                    <div class="input submit">
+                        <input type="submit" id="submitButton" value="Execute" onclick="showInfo();"/>
+                    </div>
+                </form>
+                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message[1] }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                {% endwith %}
+            </div>
         </div>
         <div id="info" style="display: none">
-            <p>Su petición se está procesando. Esto puede tardar varios minutos</p>
+            <p>Your request is being processed. This may take several minutes</p>
             <div id="loader"></div>
         </div>
     </body>

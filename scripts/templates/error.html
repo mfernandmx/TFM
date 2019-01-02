@@ -9,6 +9,17 @@
         <script src="{{ url_for('static', filename='main.js') }}"></script>
     </head>
     <body>
-        <h1>{{ error }}</h1>
+        <header>
+            <h1>Pairing of datasets with semantic techniques</h1>
+            <h2>Marcos Fernández Sellers - Master's thesis</h2>
+        </header>
+        <div id="mainSection">
+            <h3>{{ error }}</h3>
+        </div>
+        <footer>
+            <div class="back">
+                <a href="/"><button>Back to main page</button></a>
+            </div>
+        </footer>
     </body>
 </html>

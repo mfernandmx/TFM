@@ -18,18 +18,16 @@ import mimetypes
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-# TODO Unificar idioma plantillas y mensajes
-
 app.config['SECRET_KEY'] = SECRET_KEY
 
 '''
 Form class where portals and their types will be set by the user
 '''
 class PortalsForm(Form):
-    portal1 = StringField('URL Portal 1:', validators=[validators.required()], default='https://www.data.act.gov.au/api/views/metadata/v1')
+    portal1 = StringField('URL Portal 1', validators=[validators.required()], default='https://www.data.act.gov.au/api/views/metadata/v1')
     type1 = SelectField('Portal Type 1', choices=[('ckan', 'ckan'), ('socrata', 'socrata')], default='socrata')
 
-    portal2 = StringField('URL Portal 2:', validators=[validators.required()], default='https://data.cityofchicago.org/api/views/metadata/v1')
+    portal2 = StringField('URL Portal 2', validators=[validators.required()], default='https://data.cityofchicago.org/api/views/metadata/v1')
     type2 = SelectField('Portal Type 2', choices=[('ckan', 'ckan'), ('socrata', 'socrata')], default='socrata')
 
 

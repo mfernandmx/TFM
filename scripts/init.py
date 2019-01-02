@@ -21,7 +21,7 @@ def initProcessing(portal1, typePortal1, portal2, typePortal2):
         raise
 
     # TODO Remove coincidences to file
-    jsonObject = json.dumps(coincidences1)
+    jsonObject = json.dumps(coincidences1, sort_keys=True, indent=4)
     f = open("coincidences1.json", "w")
     f.write(jsonObject)
     f.close()
@@ -33,7 +33,7 @@ def initProcessing(portal1, typePortal1, portal2, typePortal2):
     except PortalNotWorking:
         raise
 
-    jsonObject = json.dumps(coincidences2)
+    jsonObject = json.dumps(coincidences2, sort_keys=True, indent=4)
     f = open("coincidences2.json", "w")
     f.write(jsonObject)
     f.close()
@@ -43,7 +43,7 @@ def initProcessing(portal1, typePortal1, portal2, typePortal2):
 
     # It takes as first argument the array with less number of datasets, in order to create less sheets on the results file
 
-    if len(datasets1) <= len(datasets2):
+    if ((len(datasets1) <= len(datasets2)) and len(datasets1) != 0) or len(datasets2) == 0:
         resultsJSON = processDatasets(datasets1, datasets2, coincidences1, coincidences2)
     else:
         resultsJSON = processDatasets(datasets2, datasets1, coincidences2, coincidences1)
