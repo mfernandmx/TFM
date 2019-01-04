@@ -93,9 +93,8 @@ Loader
 #loader {
     position: absolute;
     left: 50%;
-    top: 55%;
     z-index: 1;
-    margin: -75px 0 0 -75px;
+    margin-left: -75px;
     border-radius: 50%;
     border: 16px solid var(--dark);
     border-top-color: var(--bright);

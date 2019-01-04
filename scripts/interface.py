@@ -95,7 +95,7 @@ def results():
                 print(resultsJSON)
                 resultsTable = formatResults(resultsJSON)
                 print(resultsTable)
-                response = render_template("results.html", time=executionTime, results=resultsTable)
+                response = render_template("results.html", time=executionTime, results=resultsTable, portals=[params["portal1"], params["portal2"]])
             except PortalTypeError as e:
                 response = render_template('error.html', error=str(e)), 400
             except PortalNotWorking as e:
