@@ -20,7 +20,12 @@ Given a string, return true if it contains numbers. False if not
 def hasNumbers(inputString):
 	return bool(re.search(r'\d', inputString))
 
-# TODO Comentar - Artículo Julio
+
+'''
+Given a set of words, it process them in order to have a new set of tokens based on those previous words, resultant from
+delete numbers, stop words, urls, ontologies, sparql queries, and also removing gender and number from the words, getting
+only the words' lexemes
+'''
 def tokenize(data):
 	# URLs, properties and sparql queries are removed
 	text = re.sub(r'http.+', '', data)

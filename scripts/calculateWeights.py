@@ -41,22 +41,13 @@ def localWeight(words):
 
 	for word in list(words):
 
-		if words[word] > 0:
-			datasetLocalWeights[word] = {
-				"BNRY": 1,
-				"FREQ": words[word],
-				"LOGA": 1 + math.log(words[word]),
-				"LOGN": (1 + math.log(words[word])) / (1 + math.log(avgFrequency)),
-				"ATF1": 0.5 + 0.5 * (words[word] / maximumFrequency)
-			}
-		else:
-			datasetLocalWeights[word] = {
-				"BNRY": 0,
-				"FREQ": words[word],
-				"LOGA": 0,
-				"LOGN": 0,
-				"ATF1": 0
-			}
+		datasetLocalWeights[word] = {
+			"BNRY": 1,
+			"FREQ": words[word],
+			"LOGA": 1 + math.log(words[word]),
+			"LOGN": (1 + math.log(words[word])) / (1 + math.log(avgFrequency)),
+			"ATF1": 0.5 + 0.5 * (words[word] / maximumFrequency)
+		}
 
 	return datasetLocalWeights
 
@@ -114,7 +105,7 @@ def globalWeight(coincidences):
 			datasetGlobalWeights[word] = {
 				"IDFB": math.log(numberOfDatasets / datasetCoincidences[word]),
 				"IDFP": 0,
-				"ENDPY": globalWeightEntropy(coincidences, word),
+				"ENPY": globalWeightEntropy(coincidences, word),
 				"IGFF": totalCoincidences[word] / datasetCoincidences[word],
 				"NONE": 1
 			}
@@ -123,7 +114,7 @@ def globalWeight(coincidences):
 			datasetGlobalWeights[word] = {
 				"IDFB": math.log(numberOfDatasets / datasetCoincidences[word]),
 				"IDFP": math.log(float(numberOfDatasets - datasetCoincidences[word]) / float(datasetCoincidences[word])),
-				"ENDPY": globalWeightEntropy(coincidences, word),
+				"ENPY": globalWeightEntropy(coincidences, word),
 				"IGFF": totalCoincidences[word] / datasetCoincidences[word],
 				"NONE": 1
 			}
@@ -164,39 +155,38 @@ def calculateDatasetWeights(title, coincidences):
 	datasetLocalWeight = localWeight(coincidences[title])
 	datasetGlobalWeight = globalWeight(coincidences)
 
-	# TODO Comentar slope y pivot - Artículo ornl-tm-13756 - Añadir a la doc
+	# Constant value
 	slope = 0.2
-	# average number of ditinct terms por dataset in the entire collection
+
+	# Average number of ditinct terms por dataset in the entire collection
 	pivot = 0
+
 	for word in list(coincidences):
 		if word != 'datasetCoincidences' and word != 'totalCoincidences':
 			pivot += len(coincidences[word])
 
 	pivot = pivot / (len(coincidences) - 2)
 
-	# TODO Probar qué modos dan mejores resultados
-	# TODO Portales en GDrive - Portales TFM / RDF-Tests
-	'''
-	localMode = ''
-	globalMode = ''
-	normalizationMode = ''
-	'''
+	combinations = [
+		{"localMode": "LOGA", "globalMode": "IGFF", "normalizationMode": "COSN"},
+		{"localMode": "FREQ", "globalMode": "IDFB", "normalizationMode": "COSN"}
+	]
 
-	print("-----------------------")
-	print("--- LOGA ENTPY COSN ---")
+	datasetWeights = []
 
-	localMode = 'LOGA'
-	globalMode = 'ENDPY'
-	normalizationMode = 'COSN'
-	datasetNormalizationFactor = normalizationFactor(coincidences[title], datasetGlobalWeight, globalMode, datasetLocalWeight, localMode, slope, pivot)
+	for comb in combinations:
 
-	weights = {}
+		localMode = comb["localMode"]
+		globalMode = comb["globalMode"]
+		normalizationMode = comb["normalizationMode"]
 
-	for word in coincidences[title]:
-		print(
-			word, " : ", datasetLocalWeight[word][localMode], "*", datasetGlobalWeight[word][globalMode], "*", datasetNormalizationFactor[normalizationMode],
-			" = ", (datasetLocalWeight[word][localMode] * datasetGlobalWeight[word][globalMode] * datasetNormalizationFactor[normalizationMode]))
+		datasetNormalizationFactor = normalizationFactor(coincidences[title], datasetGlobalWeight, globalMode, datasetLocalWeight, localMode, slope, pivot)
 
-		weights[word] = (datasetLocalWeight[word][localMode] * datasetGlobalWeight[word][globalMode] * datasetNormalizationFactor[normalizationMode])
+		weights = {}
 
-	return weights
+		for word in coincidences[title]:
+			weights[word] = (datasetLocalWeight[word][localMode] * datasetGlobalWeight[word][globalMode] * datasetNormalizationFactor[normalizationMode])
+
+		datasetWeights.append({"modes": comb, "weights": weights})
+
+	return datasetWeights
