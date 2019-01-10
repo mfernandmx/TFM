@@ -5,12 +5,9 @@ import re
 
 from scripts.normalizer import normalize
 
-# LDA proccess
 from nltk.tokenize import RegexpTokenizer
-from nltk.stem import SnowballStemmer
+from nltk.stem import WordNetLemmatizer
 
-# import nltk
-# nltk.download('stopwords')
 from nltk.corpus import stopwords
 stop_words = stopwords.words('english')
 
@@ -46,7 +43,7 @@ def tokenize(data):
 	noNumbers = [i for i in aux if not hasNumbers(str(i))]
 
 	# Removing gender and number from words
-	p_stemmer = SnowballStemmer('english')
-	tokens = [p_stemmer.stem(i) for i in noNumbers]
+	lemmatizer = WordNetLemmatizer()
+	tokens = [lemmatizer.lemmatize(i) for i in noNumbers]
 
 	return tokens

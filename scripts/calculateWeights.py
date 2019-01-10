@@ -172,7 +172,7 @@ def calculateDatasetWeights(title, coincidences):
 		{"localMode": "FREQ", "globalMode": "IDFB", "normalizationMode": "COSN"}
 	]
 
-	datasetWeights = []
+	datasetWeights = {}
 
 	for comb in combinations:
 
@@ -187,6 +187,6 @@ def calculateDatasetWeights(title, coincidences):
 		for word in coincidences[title]:
 			weights[word] = (datasetLocalWeight[word][localMode] * datasetGlobalWeight[word][globalMode] * datasetNormalizationFactor[normalizationMode])
 
-		datasetWeights.append({"modes": comb, "weights": weights})
+		datasetWeights[comb["localMode"] + "-" + comb["globalMode"] + "-" + comb["normalizationMode"]] = weights
 
 	return datasetWeights
