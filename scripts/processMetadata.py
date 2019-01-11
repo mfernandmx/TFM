@@ -31,7 +31,7 @@ def processDatasets(datasets1, datasets2, coincidences1, coincidences2):
 			weights2 = calculateDatasetWeights(dataset2.title, coincidences2)
 
 			# Based on the words weights, calculate the likeness value between two datasets
-			likenessValue = calculateLikenessValue(dataset1.title, weights1, dataset2.title, weights2)
+			likenessValue = calculateLikenessValue(weights1, weights2)
 
 			results[str(generalId)]["results"].append({"title": dataset2.title, "value": likenessValue, "rdfs": []})
 
