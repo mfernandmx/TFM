@@ -3,6 +3,9 @@
 
 import xlwt
 
+'''
+Given the results' JSON object, it converts it into a XLS file
+'''
 def JSONtoXLS(data):
 
 	# Create xls file
@@ -10,6 +13,7 @@ def JSONtoXLS(data):
 	generalSheet = wb.add_sheet("General", cell_overwrite_ok=True)
 	generalRow = 0
 
+	# Iterate over the first portal's datasets
 	for datasetId in data.keys():
 
 		generalColumn = 0
@@ -26,6 +30,7 @@ def JSONtoXLS(data):
 
 		row = 0
 
+		# Iterate over the second portal's datasets
 		for dataset in data[datasetId]["results"]:
 
 			column = 0

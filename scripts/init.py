@@ -1,11 +1,16 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 from objects.Exceptions import PortalTypeError, PortalNotWorking
 from scripts.getPortalsMetadata import getPortalInfo
 from scripts.processMetadata import processDatasets
 
-import json
 import time
 
+'''
+Given two Open Data portals' API and their corresponding type, it calculates the grade of similarity between all the
+datasets, returning a JSON object with the results
+'''
 def initProcessing(portal1, typePortal1, portal2, typePortal2):
 
     start = time.time()
@@ -20,12 +25,6 @@ def initProcessing(portal1, typePortal1, portal2, typePortal2):
     except PortalNotWorking:
         raise
 
-    # TODO Remove coincidences to file
-    jsonObject = json.dumps(coincidences1, sort_keys=True, indent=4)
-    f = open("coincidences1.json", "w")
-    f.write(jsonObject)
-    f.close()
-
     try:
         datasets2, discarded2, coincidences2 = getPortalInfo(portal2, typePortal2)
     except PortalTypeError:
@@ -33,25 +32,17 @@ def initProcessing(portal1, typePortal1, portal2, typePortal2):
     except PortalNotWorking:
         raise
 
-    jsonObject = json.dumps(coincidences2, sort_keys=True, indent=4)
-    f = open("coincidences2.json", "w")
-    f.write(jsonObject)
-    f.close()
-
-    print("Discarded 1", discarded1)
-    print("Discarded 2", discarded2)
-
     # It takes as first argument the array with less number of datasets, in order to create less sheets on the results file
 
     if ((len(datasets1) <= len(datasets2)) and len(datasets1) != 0) or len(datasets2) == 0:
         resultsJSON = processDatasets(datasets1, datasets2, coincidences1, coincidences2)
+        reverse = False
     else:
         resultsJSON = processDatasets(datasets2, datasets1, coincidences2, coincidences1)
-
-    print("Execution finished")
+        reverse = True
 
     end = time.time()
     executionTime = end - start
     executionTime = time.strftime('%H:%M:%S', time.gmtime(executionTime))
 
-    return resultsJSON, executionTime
+    return resultsJSON, executionTime, reverse

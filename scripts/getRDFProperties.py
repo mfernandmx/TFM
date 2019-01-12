@@ -6,6 +6,9 @@ import requests
 from rdflib import Graph
 from rdflib.plugins.sparql import prepareQuery
 
+'''
+Given a property or a class, it removes the ontology part
+'''
 def removeOntology(value):
     if "#" in value:
         newValue = value.split("#")[1]
@@ -15,6 +18,11 @@ def removeOntology(value):
 
     return newValue
 
+
+'''
+Given a rdf resource's url, it downloads it and stores all its classes and properties by setting the rdf into a graph
+and making sparql queries on it
+'''
 def processRDF(url):
 
     graph = Graph()

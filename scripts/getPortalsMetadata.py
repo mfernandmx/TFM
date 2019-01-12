@@ -17,6 +17,7 @@ rdfFormats = ["rdf"]
 Given a list of datasets from an open data portal, it is obtained all the metadata from each dataset
 '''
 def getDatasetsInfoFromList(portal, datasets):
+
 	data = []
 
 	# Iterate over the list of datasets, and query on each of them
@@ -150,14 +151,12 @@ def getPortalInfo(portal, typePortal):
 		# Get info from json object array
 		numDatasets = len(dataJson)
 		totalDatasets += numDatasets
-		print("Number of datasets:", numDatasets)
 
 		index = 0
 
 		# Once the metadata is downloaded, we iterate it to get the information we want to process
 		for element in dataJson:
 
-			print("Dataset", index)
 			dataset = Dataset()
 
 			filtered = True
@@ -170,6 +169,9 @@ def getPortalInfo(portal, typePortal):
 				filtered = filterDataset(portal, dataset.title)
 			else:
 				dataset.DCATformat = False
+
+			# Set filtered to True to omit filter test function
+			# filtered = True
 
 			if filtered:
 
@@ -194,6 +196,7 @@ def getPortalInfo(portal, typePortal):
 				if theme != "" and theme in element.keys() and element[theme] is not None:
 					dataset.theme = element[theme]
 
+				# After obtaining the metadata, it looks for rdf resources
 				if resources != "" and resources in element.keys():
 					for resource in element[resources]:
 						resourceFormat = resource["format"]
@@ -236,7 +239,6 @@ def getPortalInfo(portal, typePortal):
 							urls.append(urlData)
 
 					for urlData in urls:
-						print("RESOURCE:", urlData)
 
 						for resourceFormat in rdfFormats:
 							urlResource = urlData + "." + resourceFormat
@@ -264,10 +266,10 @@ def getPortalInfo(portal, typePortal):
 
 				index += 1
 
-				# TODO Just for test, delete for production
+				# Uncomment for test
 				# if index == 2:
-				#	finished = True
-				#	break
+				# finished = True
+				# break
 
 		if numDatasets < 1000:
 			finished = True

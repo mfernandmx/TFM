@@ -54,6 +54,7 @@ def formatResults(resultsJSON):
 
 @app.errorhandler(404)
 def page_not_found(arg):
+    print(arg)
     return render_template('error.html', error="Page not found. Check that the url is correct"), 404
 
 @app.route("/", methods=['GET', 'POST'])
@@ -91,11 +92,18 @@ def results():
             resultsJSON = {}
 
             try:
-                resultsJSON, executionTime = initProcessing(params["portal1"], params["type1"], params["portal2"], params["type2"])
+                resultsJSON, executionTime, reverse = initProcessing(params["portal1"], params["type1"], params["portal2"], params["type2"])
                 print(resultsJSON)
+
                 resultsTable = formatResults(resultsJSON)
-                print(resultsTable)
-                response = render_template("results.html", time=executionTime, results=resultsTable, portals=[params["portal1"], params["portal2"]])
+
+                if not reverse:
+                    portals = [params["portal1"], params["portal2"]]
+                else:
+                    portals = [params["portal2"], params["portal1"]]
+
+                response = render_template("results.html", time=executionTime, results=resultsTable, portals=portals)
+
             except PortalTypeError as e:
                 response = render_template('error.html', error=str(e)), 400
             except PortalNotWorking as e:
@@ -167,7 +175,7 @@ def api():
             resultsJSON = {}
 
             try:
-                resultsJSON, executionTime = initProcessing(portal1, typePortal1, portal2, typePortal2)
+                resultsJSON, executionTime, reverse = initProcessing(portal1, typePortal1, portal2, typePortal2)
 
                 if request.args.get('format') is not None and request.args.get('format') != "":
                     resultsFormat = request.args.get('format')

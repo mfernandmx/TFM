@@ -24,6 +24,7 @@ delete numbers, stop words, urls, ontologies, sparql queries, and also removing 
 only the words' lexemes
 '''
 def tokenize(data):
+
 	# URLs, properties and sparql queries are removed
 	text = re.sub(r'http.+', '', data)
 	text = re.sub(r'\w+:\w+', '', text)

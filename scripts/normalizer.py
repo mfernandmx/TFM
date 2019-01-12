@@ -1,6 +1,11 @@
+#!/usr/bin/python
 # -*- encoding: utf-8 -*-
 
+"""
+Given a word, it removes all the characters that contains accent marks or any other symbol
+"""
 def normalize(word):
+
 	result = word.lower()
 	result = result.replace(u'á', u'a')
 	result = result.replace(u'ά', u'a')
@@ -44,11 +49,5 @@ def normalize(word):
 	result = result.replace(u'\n', u'')
 	result = result.replace(u'\r', u'')
 	result = result.replace(u'\t', u'')
-	# result = result.replace(R'\s', u'')
-
-	# regex1 = re.compile(r"\W*", re.IGNORECASE)
-	# regex3 = re.compile(r"\s*", re.IGNORECASE)
-	# result = regex1.sub('', result)
-	# result = regex3.sub('', result)
 
 	return result

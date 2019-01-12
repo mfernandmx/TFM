@@ -1,10 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-def filterDataset(portal, dataset):
-
-	filtered = True
-	portals = {
+# List of portals and datasets
+portals = {
 		"https://www.data.act.gov.au/api/views/metadata/v1": [
 			"ACT School Locations 2017 - archived",
 			"Schools in the ACT - archived",
@@ -76,6 +74,13 @@ def filterDataset(portal, dataset):
 			"1980 - 2010 Census Data by Neighborhood"
 		]
 	}
+
+'''
+Given a Open Data portal's API url and one dataset name, it checks if the dataset belongs to that portal
+'''
+def filterDataset(portal, dataset):
+
+	filtered = True
 
 	if portal in portals.keys():
 		if dataset not in portals[portal]:

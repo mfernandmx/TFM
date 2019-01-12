@@ -5,7 +5,7 @@ from scripts.calculateWeights import calculateDatasetWeights
 from scripts.calculateSimilarities import calculateLikenessValue
 
 '''
-Given all datasets' metadata from two open data portals, it creates and JSON object with the likeness value between all of them
+Given all datasets' metadata from two open data portals, it creates a JSON object with the likeness value between all of them
 '''
 def processDatasets(datasets1, datasets2, coincidences1, coincidences2):
 

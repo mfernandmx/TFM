@@ -48,7 +48,7 @@ def main():
             typePortal2 = "ckan"
 
         try:
-            resultsJSON, executionTime = initProcessing(portal1, typePortal1, portal2, typePortal2)
+            resultsJSON, executionTime, reverse = initProcessing(portal1, typePortal1, portal2, typePortal2)
         except PortalTypeError as e:
             print(e)
             sys.exit(0)
@@ -69,6 +69,8 @@ def main():
 
         # Store results in xls file
         resultsFile.save("results.xls")
+
+        print("Execution finished")
 
 
 if __name__ == '__main__':
