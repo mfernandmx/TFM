@@ -1,8 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import requests
-
 from rdflib import Graph
 from rdflib.plugins.sparql import prepareQuery
 
@@ -70,7 +68,7 @@ def processRDF(url):
                     if prop not in properties.keys():
                         properties[prop] = {"value": str(value), "type": valueType}
 
-    except requests.exceptions.RequestException as e:
+    except Exception as e:
         print(e)
         return [], []
 
