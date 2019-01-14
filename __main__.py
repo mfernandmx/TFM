@@ -9,6 +9,12 @@ from scripts.JSONtoXLS import JSONtoXLS
 import argparse
 import json
 
+# Downloads nltk packages needed
+import nltk
+nltk.download('wordnet')
+nltk.download('wordnet_ic')
+nltk.download('stopwords')
+
 def main():
 
     # Example parameters for command line
