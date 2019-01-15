@@ -23,22 +23,26 @@ def processDatasets(datasets1, datasets2, coincidences1, coincidences2):
 		for RDFResource in dataset1.RDFResources:
 			results[str(generalId)]["rdfs"].append(RDFResource)
 
-		# Calculate words weights for each dataset
-		weights1 = calculateDatasetWeights(dataset1.title, coincidences1)
+		if len(coincidences1.keys()) > 2:
 
-		for dataset2 in datasets2:
+			# Calculate words weights for each dataset
+			weights1 = calculateDatasetWeights(dataset1.title, coincidences1)
 
-			weights2 = calculateDatasetWeights(dataset2.title, coincidences2)
+			for dataset2 in datasets2:
 
-			# Based on the words weights, calculate the likeness value between two datasets
-			likenessValue = calculateLikenessValue(weights1, weights2)
+				if len(coincidences2.keys()) > 2:
 
-			results[str(generalId)]["results"].append({"title": dataset2.title, "value": likenessValue, "rdfs": []})
+					weights2 = calculateDatasetWeights(dataset2.title, coincidences2)
 
-			for RDFResource in dataset2.RDFResources:
-				results[str(generalId)]["results"][len(results[str(generalId)]["results"]) - 1]["rdfs"].append(RDFResource)
+					# Based on the words weights, calculate the likeness value between two datasets
+					likenessValue = calculateLikenessValue(weights1, weights2)
 
-		generalId += 1
+					results[str(generalId)]["results"].append({"title": dataset2.title, "value": likenessValue, "rdfs": []})
+
+					for RDFResource in dataset2.RDFResources:
+						results[str(generalId)]["results"][len(results[str(generalId)]["results"]) - 1]["rdfs"].append(RDFResource)
+
+			generalId += 1
 
 	print("Sending results")
 

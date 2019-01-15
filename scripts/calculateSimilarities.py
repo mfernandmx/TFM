@@ -25,7 +25,10 @@ def processSimilarities(similarities):
 	valuesEqualsToOne = 0
 
 	keys1 = len(similarities.keys())
-	keys2 = len(similarities[list(similarities.keys())[0]].keys())
+	if keys1 > 0:
+		keys2 = len(similarities[list(similarities.keys())[0]].keys())
+	else:
+		keys2 = 0
 
 	if keys1 <= keys2:
 
@@ -58,17 +61,19 @@ def processSimilarities(similarities):
 			values.append(maxValue)
 
 	numWords = len(values)
-	percentage = float(1/numWords)
 
 	likenessValue = 0
 
-	for value in values:
-		if value == 1:
-			aux = (percentage + (float(percentage/numWords) * (numWords - valuesEqualsToOne))) * value
-		else:
-			aux = (percentage - (float(percentage/numWords) * valuesEqualsToOne)) * value
+	if numWords > 0:
+		percentage = float(1/numWords)
 
-		likenessValue += aux
+		for value in values:
+			if value == 1:
+				aux = (percentage + (float(percentage/numWords) * (numWords - valuesEqualsToOne))) * value
+			else:
+				aux = (percentage - (float(percentage/numWords) * valuesEqualsToOne)) * value
+
+			likenessValue += aux
 
 	return likenessValue
 
